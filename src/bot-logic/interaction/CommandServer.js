@@ -65,6 +65,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var systeminformation_1 = __importDefault(require("systeminformation"));
 var cp = __importStar(require("child_process"));
 var MessageEmbed_1 = __importDefault(require("../utils/MessageEmbed"));
+var GlobalProcessStore_1 = __importDefault(require("./GlobalProcessStore"));
+var GlobalProcessStore_2 = __importDefault(require("./GlobalProcessStore"));
 var getSystemStats = function () { return __awaiter(void 0, void 0, void 0, function () {
     var _a;
     return __generator(this, function (_b) {
@@ -86,6 +88,65 @@ var getSystemStats = function () { return __awaiter(void 0, void 0, void 0, func
         }
     });
 }); };
+var createChildProcess = function (value, interaction) { return __awaiter(void 0, void 0, void 0, function () {
+    var process_1, err_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 3, , 4]);
+                return [4 /*yield*/, cp.exec(value)];
+            case 1:
+                process_1 = _a.sent();
+                if (!process_1.stdout)
+                    return [2 /*return*/, console.log('Null stdout')];
+                process_1.stdout.on('data', function (chunk) { return __awaiter(void 0, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, interaction
+                                    .editReply({ embeds: [MessageEmbed_1.default.execEmbed(chunk.toString())] })];
+                            case 1:
+                                _a.sent();
+                                return [2 /*return*/];
+                        }
+                    });
+                }); });
+                process_1.stdout.on('error', function (chunk) { return __awaiter(void 0, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, interaction
+                                    .editReply({ embeds: [MessageEmbed_1.default.execEmbed(chunk.toString())] })];
+                            case 1:
+                                _a.sent();
+                                return [2 /*return*/];
+                        }
+                    });
+                }); });
+                // @ts-ignore
+                process_1.stderr.on('data', function (chunk) { return __awaiter(void 0, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, interaction
+                                    .editReply({ embeds: [MessageEmbed_1.default.execEmbed(chunk.toString())] })];
+                            case 1:
+                                _a.sent();
+                                return [2 /*return*/];
+                        }
+                    });
+                }); });
+                GlobalProcessStore_1.default.setNewProcess("".concat(value, " ").concat(process_1.pid), process_1);
+                return [4 /*yield*/, interaction
+                        .editReply({ embeds: [MessageEmbed_1.default.execEmbed('Exec success')] })];
+            case 2:
+                _a.sent();
+                return [3 /*break*/, 4];
+            case 3:
+                err_1 = _a.sent();
+                console.error(err_1);
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
 var CommandServer = /** @class */ (function () {
     function CommandServer() {
     }
@@ -95,14 +156,11 @@ var CommandServer = /** @class */ (function () {
             case 'stats':
                 this.stats(interaction);
                 break;
-            case 'deploy':
-                this.deploy(interaction);
-                break;
-            case 'reboot':
-                this.reboot(interaction);
-                break;
             case 'exec':
-                this.exec(interaction);
+                this.exec(interaction).catch();
+                break;
+            case 'get_process':
+                this.getProcess(interaction).catch();
                 break;
             default:
                 break;
@@ -126,75 +184,35 @@ var CommandServer = /** @class */ (function () {
     };
     CommandServer.prototype.exec = function (interaction) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, value, name, type, process_1, err_1;
-            var _this = this;
+            var _a, value, name, type;
             return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        if (!interaction.options.data[0].options)
-                            return [2 /*return*/, console.log('interaction options empty')];
-                        _a = interaction.options.data[0].options[0], value = _a.value, name = _a.name, type = _a.type;
-                        _b.label = 1;
-                    case 1:
-                        _b.trys.push([1, 3, , 4]);
-                        if (typeof value !== "string")
-                            return [2 /*return*/, console.log('Value is not string')];
-                        process_1 = cp.exec(value);
-                        if (!process_1.stdout)
-                            return [2 /*return*/, console.log('Null stdout')];
-                        process_1.stdout.on('data', function (chunk) { return __awaiter(_this, void 0, void 0, function () {
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0: return [4 /*yield*/, interaction
-                                            .editReply({ embeds: [MessageEmbed_1.default.execEmbed(chunk.toString())] })];
-                                    case 1:
-                                        _a.sent();
-                                        return [2 /*return*/];
-                                }
-                            });
-                        }); });
-                        process_1.stdout.on('error', function (chunk) { return __awaiter(_this, void 0, void 0, function () {
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0: return [4 /*yield*/, interaction
-                                            .editReply({ embeds: [MessageEmbed_1.default.execEmbed(chunk.toString())] })];
-                                    case 1:
-                                        _a.sent();
-                                        return [2 /*return*/];
-                                }
-                            });
-                        }); });
-                        // @ts-ignore
-                        process_1.stderr.on('data', function (chunk) { return __awaiter(_this, void 0, void 0, function () {
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0: return [4 /*yield*/, interaction
-                                            .editReply({ embeds: [MessageEmbed_1.default.execEmbed(chunk.toString())] })];
-                                    case 1:
-                                        _a.sent();
-                                        return [2 /*return*/];
-                                }
-                            });
-                        }); });
-                        return [4 /*yield*/, interaction
-                                .editReply({ embeds: [MessageEmbed_1.default.execEmbed('Exec success')] })];
-                    case 2:
-                        _b.sent();
-                        return [3 /*break*/, 4];
-                    case 3:
-                        err_1 = _b.sent();
-                        console.error(err_1);
-                        return [3 /*break*/, 4];
-                    case 4: return [2 /*return*/];
-                }
+                if (!interaction.options.data[0].options)
+                    return [2 /*return*/, console.log('interaction options empty')];
+                _a = interaction.options.data[0].options[0], value = _a.value, name = _a.name, type = _a.type;
+                if (typeof value !== "string")
+                    return [2 /*return*/, console.log('Value is not string')];
+                createChildProcess(value, interaction)
+                    .catch(function (err) { return console.error(err); });
+                return [2 /*return*/];
             });
         });
     };
-    CommandServer.prototype.reboot = function (interaction) {
-        console.log(interaction);
-    };
-    CommandServer.prototype.deploy = function (interaction) {
-        console.log(interaction);
+    CommandServer.prototype.getProcess = function (interaction) {
+        return __awaiter(this, void 0, void 0, function () {
+            var data, embed;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        data = GlobalProcessStore_2.default.getAllProcess().values.join('\n');
+                        embed = MessageEmbed_1.default.execEmbed(data);
+                        return [4 /*yield*/, interaction
+                                .editReply({ embeds: [embed] })];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
     };
     return CommandServer;
 }());

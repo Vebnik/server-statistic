@@ -13,6 +13,10 @@ const deployCommands = (opt: SlashCommandSubcommandBuilder) =>
 	opt.setName('deploy')
 		.setDescription('Deploy commands to current server')
 
+const getChildProcess = (opt: SlashCommandSubcommandBuilder) =>
+	opt.setName('get_process')
+		.setDescription('Show all child process')
+
 const exec = (opt: SlashCommandSubcommandBuilder) =>
 	opt.setName('exec')
 		.setDescription('exec commands')
@@ -21,11 +25,13 @@ const exec = (opt: SlashCommandSubcommandBuilder) =>
 			.setDescription('Terminal command')
 			.setRequired(true))
 
+
 export {
 	stats,
 	reboot,
 	deployCommands,
-	exec
+	exec,
+	getChildProcess
 }
 
 

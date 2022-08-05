@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.exec = exports.deployCommands = exports.reboot = exports.stats = void 0;
+exports.getChildProcess = exports.exec = exports.deployCommands = exports.reboot = exports.stats = void 0;
 var stats = function (opt) {
     return opt.setName('stats')
         .setDescription('Get full server statistic');
@@ -16,6 +16,11 @@ var deployCommands = function (opt) {
         .setDescription('Deploy commands to current server');
 };
 exports.deployCommands = deployCommands;
+var getChildProcess = function (opt) {
+    return opt.setName('get_process')
+        .setDescription('Show all child process');
+};
+exports.getChildProcess = getChildProcess;
 var exec = function (opt) {
     return opt.setName('exec')
         .setDescription('exec commands')

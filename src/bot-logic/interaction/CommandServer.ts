@@ -3,6 +3,9 @@ import si from 'systeminformation'
 import * as cp from 'child_process'
 import MessageEmbed from "../utils/MessageEmbed";
 import {ServerStats} from "../interface/ServerCommand";
+import GlobalProcessStore from "./GlobalProcessStore";
+import globalProcessStore from "./GlobalProcessStore";
+
 
 
 const getSystemStats = async (): Promise<ServerStats> => ({
@@ -11,6 +14,40 @@ const getSystemStats = async (): Promise<ServerStats> => ({
 	os: await si.osInfo(),
 	network: await si.networkInterfaces()
 })
+
+const createChildProcess = async (value: string, interaction: CommandInteraction) => {
+	try {
+
+		const process: cp.ChildProcess = await cp.exec(value)
+
+		if (!process.stdout)
+			return console.log('Null stdout')
+
+		process.stdout.on('data', async chunk => {
+			await interaction
+				.editReply({embeds: [MessageEmbed.execEmbed(chunk.toString())]})
+		})
+
+		process.stdout.on('error', async chunk => {
+			await interaction
+				.editReply({embeds: [MessageEmbed.execEmbed(chunk.toString())]})
+		})
+
+		// @ts-ignore
+		process.stderr.on('data', async chunk => {
+			await interaction
+				.editReply({embeds: [MessageEmbed.execEmbed(chunk.toString())]})
+		})
+
+		GlobalProcessStore.setNewProcess(`${value} ${process.pid}`, process)
+
+		await interaction
+			.editReply({embeds: [MessageEmbed.execEmbed('Exec success')]})
+
+	} catch (err) {
+		console.error(err)
+	}
+}
 
 
 class CommandServer {
@@ -23,11 +60,9 @@ class CommandServer {
 
 			case 'stats': this.stats(interaction)
 				break
-			case 'deploy': this.deploy(interaction)
+			case 'exec': this.exec(interaction).catch()
 				break
-			case 'reboot': this.reboot(interaction)
-				break
-			case 'exec': this.exec(interaction)
+			case 'get_process': this.getProcess(interaction).catch()
 				break
 			default:
 				break;
@@ -41,7 +76,6 @@ class CommandServer {
 		})
 	}
 
-
 	private async exec(interaction: CommandInteraction) {
 
 		if (!interaction.options.data[0].options)
@@ -49,46 +83,20 @@ class CommandServer {
 
 		const { value, name, type } = interaction.options.data[0].options[0]
 
-		try {
-			if(typeof value !== "string")
-				return console.log('Value is not string')
+		if(typeof value !== "string")
+			return console.log('Value is not string')
 
-			const process: cp.ChildProcess = cp.exec(value)
-
-			if (!process.stdout)
-				return console.log('Null stdout')
-
-			process.stdout.on('data', async chunk => {
-				await interaction
-					.editReply({embeds: [MessageEmbed.execEmbed(chunk.toString())]})
-			})
-
-			process.stdout.on('error', async chunk => {
-				await interaction
-					.editReply({embeds: [MessageEmbed.execEmbed(chunk.toString())]})
-			})
-
-			// @ts-ignore
-			process.stderr.on('data', async chunk => {
-				await interaction
-					.editReply({embeds: [MessageEmbed.execEmbed(chunk.toString())]})
-			})
-
-			await interaction
-				.editReply({embeds: [MessageEmbed.execEmbed('Exec success')]})
-
-		} catch (err) {
-			console.error(err)
-		}
+		createChildProcess(value, interaction)
+			.catch(err => console.error(err))
 	}
 
+	private async getProcess(interaction: CommandInteraction) {
 
-	private reboot(interaction: CommandInteraction) {
-		console.log(interaction)
-	}
+		const data = globalProcessStore.getAllProcess().values.join('\n')
+		const embed = MessageEmbed.execEmbed(data)
 
-	private deploy(interaction: CommandInteraction) {
-		console.log(interaction)
+		await interaction
+			.editReply({embeds: [embed]})
 	}
 }
 
