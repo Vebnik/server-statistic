@@ -13,10 +13,19 @@ const deployCommands = (opt: SlashCommandSubcommandBuilder) =>
 	opt.setName('deploy')
 		.setDescription('Deploy commands to current server')
 
+const exec = (opt: SlashCommandSubcommandBuilder) =>
+	opt.setName('exec')
+		.setDescription('exec commands')
+		.addStringOption(opt => opt
+			.setName('commands')
+			.setDescription('Terminal command')
+			.setRequired(true))
+
 export {
 	stats,
 	reboot,
 	deployCommands,
+	exec
 }
 
 

@@ -20,7 +20,7 @@ var MessageEmbed = /** @class */ (function () {
                 },
                 {
                     "name": "\u2796 OS",
-                    "value": "```css\nPlatform: ".concat(data.os.platform, "\nArch: x64\nKernel: ").concat(data.os.kernel, "\nHostname: ").concat(data.os.hostname, "\nRemoteSession: ").concat(data.os.remoteSession, "\n```")
+                    "value": "```css\nPlatform: ".concat(data.os.platform, "\nArch: x64\nKernel: ").concat(data.os.kernel, "\nHostname: ").concat(data.os.hostname, "\nRemoteSession: ").concat(data.os.remoteSession || 'no info', "\n```")
                 },
                 {
                     "name": "\u2796 NETWORK",
@@ -30,7 +30,14 @@ var MessageEmbed = /** @class */ (function () {
         };
         return new discord_js_1.EmbedBuilder(embed);
     };
+    MessageEmbed.prototype.execEmbed = function (data) {
+        var embed = {
+            title: "Server exec stdio \uD83D\uDDA5\uFE0F",
+            description: "```css\n".concat(data, "\n```"),
+            color: 0xfea500,
+        };
+        return new discord_js_1.EmbedBuilder(embed);
+    };
     return MessageEmbed;
 }());
 exports.default = new MessageEmbed();
-//# sourceMappingURL=MessageEmbed.js.map

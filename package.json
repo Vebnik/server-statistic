@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node -r dotenv/config src/index.js",
-    "deployCommand dev": "node -r dotenv/config src/command-deploy/deployCommand.js -g '1001124137009422356' ",
-    "deployCommand prod": "node -r dotenv/config src/command-deploy/deployCommand.js -g '884380677141831730' "
+    "deployCommand_dev": "node -r dotenv/config src/command-deploy/deployCommand.js -g '1001124137009422356' ",
+    "deployCommand_prod": "node -r dotenv/config src/command-deploy/deployCommand.js -g '884380677141831730' "
   },
   "keywords": [],
   "author": "",
@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@discordjs/rest": "^1.0.1",
-    "discord-api-types": "^0.37.0",
+    "discord-api-types": "^0.37.1",
     "discord.js": "^14.1.2",
     "dotenv": "^16.0.1",
     "eslint": "^8.21.0",

@@ -1,18 +1,9 @@
 import {Client, CommandInteraction} from "discord.js";
-import si, {Systeminformation} from 'systeminformation'
+import si from 'systeminformation'
+import * as cp from 'child_process'
 import MessageEmbed from "../utils/MessageEmbed";
-import CpuData = Systeminformation.CpuData;
-import MemData = Systeminformation.MemData;
-import OsData = Systeminformation.OsData;
-import NetworkInterfacesData = Systeminformation.NetworkInterfacesData;
+import {ServerStats} from "../interface/ServerCommand";
 
-
-export interface ServerStats {
-	cpu: CpuData
-	memory: MemData
-	os: OsData
-	network: Array<NetworkInterfacesData>
-}
 
 const getSystemStats = async (): Promise<ServerStats> => ({
 	cpu: await si.cpu(),
@@ -32,9 +23,11 @@ class CommandServer {
 
 			case 'stats': this.stats(interaction)
 				break
-			case 'deploy': this.deploy()
+			case 'deploy': this.deploy(interaction)
 				break
-			case 'reboot': this.reboot()
+			case 'reboot': this.reboot(interaction)
+				break
+			case 'exec': this.exec(interaction)
 				break
 			default:
 				break;
@@ -48,12 +41,54 @@ class CommandServer {
 		})
 	}
 
-	private deploy() {
 
+	private async exec(interaction: CommandInteraction) {
+
+		if (!interaction.options.data[0].options)
+			return console.log('interaction options empty')
+
+		const { value, name, type } = interaction.options.data[0].options[0]
+
+		try {
+			if(typeof value !== "string")
+				return console.log('Value is not string')
+
+			const process: cp.ChildProcess = cp.exec(value)
+
+			if (!process.stdout)
+				return console.log('Null stdout')
+
+			process.stdout.on('data', async chunk => {
+				await interaction
+					.editReply({embeds: [MessageEmbed.execEmbed(chunk.toString())]})
+			})
+
+			process.stdout.on('error', async chunk => {
+				await interaction
+					.editReply({embeds: [MessageEmbed.execEmbed(chunk.toString())]})
+			})
+
+			// @ts-ignore
+			process.stderr.on('data', async chunk => {
+				await interaction
+					.editReply({embeds: [MessageEmbed.execEmbed(chunk.toString())]})
+			})
+
+			await interaction
+				.editReply({embeds: [MessageEmbed.execEmbed('Exec success')]})
+
+		} catch (err) {
+			console.error(err)
+		}
 	}
 
-	private reboot() {
 
+	private reboot(interaction: CommandInteraction) {
+		console.log(interaction)
+	}
+
+	private deploy(interaction: CommandInteraction) {
+		console.log(interaction)
 	}
 }
 

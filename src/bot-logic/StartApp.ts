@@ -1,4 +1,4 @@
-import {Client, CommandInteraction, Interaction, Message} from "discord.js";
+import {Client, Message} from "discord.js";
 import EventHandler from "./EventHandler";
 import ErrorHandler from './utils/ErrorHandler'
 
@@ -11,17 +11,21 @@ class StartApp {
 				this.onMessage(client)
 			})
 			.catch(err => ErrorHandler.startError(err))
+
+		client.on('ready', () =>
+			console.log(`App started at ${new Date().toISOString()}`))
 	}
 
 	private onInteraction(client: Client) {
 		client.on('interactionCreate', interaction => {
 
-			if (interaction.isCommand())
+			if (interaction.isCommand()) {
 				EventHandler.interacionCommand(interaction, client)
 					.catch(err => ErrorHandler.interactionError(err))
+				return;
+			}
 
-			if (!interaction.isCommand())
-				console.log('not found handler interaction')
+			console.log('not found handler interaction')
 		})
 	}
 

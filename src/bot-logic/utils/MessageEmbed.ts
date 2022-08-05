@@ -1,5 +1,5 @@
-import {ServerStats} from "../interaction/CommandServer";
 import {EmbedBuilder, EmbedData} from "discord.js";
+import {ServerStats} from "../interface/ServerCommand";
 
 class MessageEmbed {
 
@@ -20,13 +20,24 @@ class MessageEmbed {
 				},
 				{
 					"name": `➖ OS`,
-					"value": `\`\`\`css\nPlatform: ${data.os.platform}\nArch: x64\nKernel: ${data.os.kernel}\nHostname: ${data.os.hostname}\nRemoteSession: ${data.os.remoteSession}\n\`\`\``
+					"value": `\`\`\`css\nPlatform: ${data.os.platform}\nArch: x64\nKernel: ${data.os.kernel}\nHostname: ${data.os.hostname}\nRemoteSession: ${data.os.remoteSession || 'no info'}\n\`\`\``
 				},
 				{
 					"name": `➖ NETWORK`,
 					"value": `\`\`\`css\nIface: ${data.network.map(el => el.iface).join('|')}, Ethernet\nIp4: ${data.network.map(el => el.ip4).join('|')}\n\`\`\``
 				}
 			]
+		}
+
+		return new EmbedBuilder(embed)
+	}
+
+	public execEmbed(data: string): EmbedBuilder {
+
+		const embed: EmbedData = {
+			title: `Server exec stdio 🖥️`,
+			description: `\`\`\`css\n${data}\n\`\`\``,
+			color: 0xfea500,
 		}
 
 		return new EmbedBuilder(embed)

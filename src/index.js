@@ -14,4 +14,3 @@ var client = new discord_js_1.Client({
     ]
 });
 StartApp_1.default.login(client);
-//# sourceMappingURL=index.js.map

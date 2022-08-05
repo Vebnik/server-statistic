@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -40,6 +63,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var systeminformation_1 = __importDefault(require("systeminformation"));
+var cp = __importStar(require("child_process"));
 var MessageEmbed_1 = __importDefault(require("../utils/MessageEmbed"));
 var getSystemStats = function () { return __awaiter(void 0, void 0, void 0, function () {
     var _a;
@@ -72,10 +96,13 @@ var CommandServer = /** @class */ (function () {
                 this.stats(interaction);
                 break;
             case 'deploy':
-                this.deploy();
+                this.deploy(interaction);
                 break;
             case 'reboot':
-                this.reboot();
+                this.reboot(interaction);
+                break;
+            case 'exec':
+                this.exec(interaction);
                 break;
             default:
                 break;
@@ -97,11 +124,78 @@ var CommandServer = /** @class */ (function () {
             });
         }); });
     };
-    CommandServer.prototype.deploy = function () {
+    CommandServer.prototype.exec = function (interaction) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, value, name, type, process_1, err_1;
+            var _this = this;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        if (!interaction.options.data[0].options)
+                            return [2 /*return*/, console.log('interaction options empty')];
+                        _a = interaction.options.data[0].options[0], value = _a.value, name = _a.name, type = _a.type;
+                        _b.label = 1;
+                    case 1:
+                        _b.trys.push([1, 3, , 4]);
+                        if (typeof value !== "string")
+                            return [2 /*return*/, console.log('Value is not string')];
+                        process_1 = cp.exec(value);
+                        if (!process_1.stdout)
+                            return [2 /*return*/, console.log('Null stdout')];
+                        process_1.stdout.on('data', function (chunk) { return __awaiter(_this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, interaction
+                                            .editReply({ embeds: [MessageEmbed_1.default.execEmbed(chunk.toString())] })];
+                                    case 1:
+                                        _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); });
+                        process_1.stdout.on('error', function (chunk) { return __awaiter(_this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, interaction
+                                            .editReply({ embeds: [MessageEmbed_1.default.execEmbed(chunk.toString())] })];
+                                    case 1:
+                                        _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); });
+                        // @ts-ignore
+                        process_1.stderr.on('data', function (chunk) { return __awaiter(_this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, interaction
+                                            .editReply({ embeds: [MessageEmbed_1.default.execEmbed(chunk.toString())] })];
+                                    case 1:
+                                        _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); });
+                        return [4 /*yield*/, interaction
+                                .editReply({ embeds: [MessageEmbed_1.default.execEmbed('Exec success')] })];
+                    case 2:
+                        _b.sent();
+                        return [3 /*break*/, 4];
+                    case 3:
+                        err_1 = _b.sent();
+                        console.error(err_1);
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
     };
-    CommandServer.prototype.reboot = function () {
+    CommandServer.prototype.reboot = function (interaction) {
+        console.log(interaction);
+    };
+    CommandServer.prototype.deploy = function (interaction) {
+        console.log(interaction);
     };
     return CommandServer;
 }());
 exports.default = new CommandServer();
-//# sourceMappingURL=CommandServer.js.map

@@ -16,14 +16,18 @@ var StartApp = /** @class */ (function () {
             _this.onMessage(client);
         })
             .catch(function (err) { return ErrorHandler_1.default.startError(err); });
+        client.on('ready', function () {
+            return console.log("App started at ".concat(new Date().toISOString()));
+        });
     };
     StartApp.prototype.onInteraction = function (client) {
         client.on('interactionCreate', function (interaction) {
-            if (interaction.isCommand())
+            if (interaction.isCommand()) {
                 EventHandler_1.default.interacionCommand(interaction, client)
                     .catch(function (err) { return ErrorHandler_1.default.interactionError(err); });
-            if (!interaction.isCommand())
-                console.log('not found handler interaction');
+                return;
+            }
+            console.log('not found handler interaction');
         });
     };
     StartApp.prototype.onMessage = function (client) {
@@ -34,4 +38,3 @@ var StartApp = /** @class */ (function () {
     return StartApp;
 }());
 exports.default = new StartApp();
-//# sourceMappingURL=StartApp.js.map

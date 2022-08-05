@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deployCommands = exports.reboot = exports.stats = void 0;
+exports.exec = exports.deployCommands = exports.reboot = exports.stats = void 0;
 var stats = function (opt) {
     return opt.setName('stats')
         .setDescription('Get full server statistic');
@@ -16,4 +16,12 @@ var deployCommands = function (opt) {
         .setDescription('Deploy commands to current server');
 };
 exports.deployCommands = deployCommands;
-//# sourceMappingURL=commandList.js.map
+var exec = function (opt) {
+    return opt.setName('exec')
+        .setDescription('exec commands')
+        .addStringOption(function (opt) { return opt
+        .setName('commands')
+        .setDescription('Terminal command')
+        .setRequired(true); });
+};
+exports.exec = exec;

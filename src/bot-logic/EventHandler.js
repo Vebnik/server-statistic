@@ -72,4 +72,3 @@ var EventHandler = /** @class */ (function () {
     return EventHandler;
 }());
 exports.default = new EventHandler();
-//# sourceMappingURL=EventHandler.js.map
