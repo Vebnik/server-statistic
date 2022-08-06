@@ -67,6 +67,7 @@ var cp = __importStar(require("child_process"));
 var MessageEmbed_1 = __importDefault(require("../utils/MessageEmbed"));
 var GlobalProcessStore_1 = __importDefault(require("./GlobalProcessStore"));
 var UserModel_1 = __importDefault(require("../../database/UserModel"));
+//TODO Переписать getProcess для получения инфы через exec('ps -la') с логикой парса как в parsProcess
 var parsProcess = function (str) {
     try {
         return str.split('\n')
@@ -234,35 +235,6 @@ var CommandServer = /** @class */ (function () {
             });
         });
     };
-    CommandServer.prototype.getProcess = function (interaction) {
-        return __awaiter(this, void 0, void 0, function () {
-            var data, embed;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        data = GlobalProcessStore_1.default.getAllProcess().values.join('\n');
-                        embed = MessageEmbed_1.default.execEmbed(data);
-                        return [4 /*yield*/, interaction
-                                .editReply({ embeds: [embed] })];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    CommandServer.prototype.getLogger = function (interaction) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, getRecentLog(interaction)];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
     CommandServer.prototype.deploy = function (interaction) {
         var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function () {
@@ -322,6 +294,35 @@ var CommandServer = /** @class */ (function () {
                         break;
                 }
                 return [2 /*return*/];
+            });
+        });
+    };
+    CommandServer.prototype.getProcess = function (interaction) {
+        return __awaiter(this, void 0, void 0, function () {
+            var data, embed;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        data = GlobalProcessStore_1.default.getAllProcess().values.join('\n');
+                        embed = MessageEmbed_1.default.execEmbed(data);
+                        return [4 /*yield*/, interaction
+                                .editReply({ embeds: [embed] })];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    CommandServer.prototype.getLogger = function (interaction) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, getRecentLog(interaction)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
             });
         });
     };

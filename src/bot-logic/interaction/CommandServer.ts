@@ -6,6 +6,7 @@ import {ServerStats} from "../interface/ServerCommand";
 import GlobalProcessStore from "./GlobalProcessStore";
 import UserModel from "../../database/UserModel";
 
+//TODO Переписать getProcess для получения инфы через exec('ps -la') с логикой парса как в parsProcess
 
 const parsProcess = (str: string): string => {
 	try {
@@ -16,7 +17,6 @@ const parsProcess = (str: string): string => {
 		return ''
 	}
 }
-
 
 const getSystemStats = async (): Promise<ServerStats> => ({
 	cpu: await si.cpu(),
@@ -116,19 +116,6 @@ class CommandServer {
 			.catch(err => console.error(err))
 	}
 
-	private async getProcess(interaction: CommandInteraction) {
-
-		const data = GlobalProcessStore.getAllProcess().values.join('\n')
-		const embed = MessageEmbed.execEmbed(data)
-
-		await interaction
-			.editReply({embeds: [embed]})
-	}
-
-	private async getLogger(interaction: CommandInteraction) {
-		await getRecentLog(interaction)
-	}
-
 	private async deploy(interaction: CommandInteraction) {
 
 		const checkProcess = async (): Promise<string> => {
@@ -175,6 +162,19 @@ class CommandServer {
 				break
 		}
 
+	}
+
+	private async getProcess(interaction: CommandInteraction) {
+
+		const data = GlobalProcessStore.getAllProcess().values.join('\n')
+		const embed = MessageEmbed.execEmbed(data)
+
+		await interaction
+			.editReply({embeds: [embed]})
+	}
+
+	private async getLogger(interaction: CommandInteraction) {
+		await getRecentLog(interaction)
 	}
 }
 

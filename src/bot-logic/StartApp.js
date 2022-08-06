@@ -15,6 +15,7 @@ var StartApp = /** @class */ (function () {
             .then(function () {
             _this.onInteraction(client);
             _this.onMessage(client);
+            _this.onReady(client);
         })
             .catch(function (err) { return ErrorHandler_1.default.startError(err); });
         client.on('ready', function () {
@@ -36,6 +37,11 @@ var StartApp = /** @class */ (function () {
         client.on('messageCreate', function (message) {
             return EventHandler_1.default.message(message, client);
         });
+    };
+    StartApp.prototype.onReady = function (client) {
+        // status
+        if (client.user)
+            client.user.setPresence({ activities: [{ name: 'Watch server process' }], status: 'idle' });
     };
     return StartApp;
 }());

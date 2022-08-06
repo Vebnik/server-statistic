@@ -10,6 +10,7 @@ class StartApp {
 			.then(() => {
 				this.onInteraction(client)
 				this.onMessage(client)
+				this.onReady(client)
 			})
 			.catch(err => ErrorHandler.startError(err))
 
@@ -36,6 +37,13 @@ class StartApp {
 	private onMessage(client: Client) {
 		client.on('messageCreate', (message: Message) =>
 			EventHandler.message(message, client))
+	}
+
+	private onReady(client: Client) {
+
+		// status
+		if (client.user)
+			client.user.setPresence({activities: [{name: 'Watch server process'}], status: 'idle'})
 	}
 
 }
