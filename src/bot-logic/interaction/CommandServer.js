@@ -224,18 +224,26 @@ var CommandServer = /** @class */ (function () {
         var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function () {
             var _d, value, name, type;
+            var _this = this;
             return __generator(this, function (_e) {
                 switch (_e.label) {
                     case 0:
                         if (!((_c = (_b = (_a = interaction.options) === null || _a === void 0 ? void 0 : _a.data[0]) === null || _b === void 0 ? void 0 : _b.options) === null || _c === void 0 ? void 0 : _c.length))
                             return [2 /*return*/, interaction.editReply({ embeds: [MessageEmbed_1.default.execEmbed('interaction options empty')] })];
                         _d = interaction.options.data[0].options[0], value = _d.value, name = _d.name, type = _d.type;
-                        return [4 /*yield*/, GlobalProcessStore_2.default.deleteProcess(value)];
+                        return [4 /*yield*/, GlobalProcessStore_2.default.deleteProcess(value)
+                                .then(function (results) { return __awaiter(_this, void 0, void 0, function () {
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0: return [4 /*yield*/, interaction
+                                                .editReply({ embeds: [MessageEmbed_1.default.execEmbed(results ? 'Exec success' : 'Not found pid')] })];
+                                        case 1:
+                                            _a.sent();
+                                            return [2 /*return*/];
+                                    }
+                                });
+                            }); })];
                     case 1:
-                        _e.sent();
-                        return [4 /*yield*/, interaction
-                                .editReply({ embeds: [MessageEmbed_1.default.execEmbed('interaction options empty')] })];
-                    case 2:
                         _e.sent();
                         return [2 /*return*/];
                 }

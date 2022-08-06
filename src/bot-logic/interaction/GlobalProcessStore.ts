@@ -17,11 +17,19 @@ class GlobalProcessStore {
 
 	public async deleteProcess(key: any) {
 
-		if (!this.childProcessStore.get(key))
-			return console.log('Not have process')
+		const prom = new Promise(resolve => {
+			this.childProcessStore.forEach((value, key1) => {
+				if (key1.includes(key)) {
+					value.kill()
+					this.childProcessStore?.delete(key1)
+					resolve(true)
+				}
+			})
+			resolve(false)
+		})
 
-		this.childProcessStore.get(key).kill()
-		await this.childProcessStore?.delete(key)
+		await Promise.all([prom])
+		return prom
 	}
 
 	public getAllProcess(): ProcessStore {

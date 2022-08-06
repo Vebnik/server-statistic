@@ -13,7 +13,7 @@ const stats = (opt: SlashCommandSubcommandBuilder) =>
 
 const stopProcess = (opt: SlashCommandSubcommandBuilder) =>
 	opt.setName('stop_process')
-		.setDescription('')
+		.setDescription('Kill target process')
 		.addIntegerOption(opt => opt
 			.setName('pid')
 			.setDescription('process id')

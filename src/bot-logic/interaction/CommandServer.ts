@@ -112,9 +112,11 @@ class CommandServer {
 		const { value, name, type } = interaction.options.data[0].options[0]
 
 		await globalProcessStore.deleteProcess(value)
+			.then(async results => {
+				await interaction
+					.editReply({embeds: [MessageEmbed.execEmbed(results ? 'Exec success' : 'Not found pid')]})
+			})
 
-		await interaction
-			.editReply({embeds: [MessageEmbed.execEmbed('interaction options empty')]})
 	}
 }
 

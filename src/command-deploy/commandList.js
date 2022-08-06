@@ -12,7 +12,7 @@ var stats = function (opt) {
 exports.stats = stats;
 var stopProcess = function (opt) {
     return opt.setName('stop_process')
-        .setDescription('')
+        .setDescription('Kill target process')
         .addIntegerOption(function (opt) { return opt
         .setName('pid')
         .setDescription('process id')
