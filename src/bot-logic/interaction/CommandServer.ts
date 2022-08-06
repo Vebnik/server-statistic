@@ -7,6 +7,16 @@ import GlobalProcessStore from "./GlobalProcessStore";
 import UserModel from "../../database/UserModel";
 
 
+const parsProcess = (str: string): string => {
+	try {
+		return str.split('\n')
+			.filter(el => el.includes('python'))[0]
+			.replace(/( )+/gmi, ' ').split(' ')[3]
+	} catch {
+		return ''
+	}
+}
+
 
 const getSystemStats = async (): Promise<ServerStats> => ({
 	cpu: await si.cpu(),
@@ -73,9 +83,9 @@ class CommandServer {
 				break
 			case 'get_process': this.getProcess(interaction).catch()
 				break
-			case 'stop_process': this.stopProcess(interaction).catch()
-				break
 			case 'get_logger': this.getLogger(interaction).catch()
+				break
+			case 'deploy': this.deploy(interaction).catch()
 				break
 			default:
 				break;
@@ -115,23 +125,45 @@ class CommandServer {
 			.editReply({embeds: [embed]})
 	}
 
-	private async stopProcess(interaction: CommandInteraction) {
+	private async getLogger(interaction: CommandInteraction) {
+		await getRecentLog(interaction)
+	}
+
+	private async deploy(interaction: CommandInteraction) {
+
+		const checkProcess = async (): Promise<string> => {
+			return new Promise(async resolve => {
+				const process = await cp.exec('ps -la')
+				process.stdout?.on('data', chunk => resolve(parsProcess(chunk.toString())))
+			})
+		}
+
+		const startCommand = () => {
+			checkProcess().then(pid => { pid
+				? interaction.editReply({embeds: [MessageEmbed.execEmbed('Process already exist')]})
+				: createChildProcess('python3 ../Bot_Lebowski/bot.py', interaction).catch()
+			})
+		}
+
+		const permission: Array<string> = ['531958734495154176', '324889109355298829']
+
+		if(!permission.includes(interaction.user.id))
+			return interaction.editReply({embeds: [MessageEmbed.execEmbed('You have not cum')]})
 
 		if (!interaction.options?.data[0]?.options?.length)
 			return interaction.editReply({embeds: [MessageEmbed.execEmbed('interaction options empty')]})
 
 		const { value, name, type } = interaction.options.data[0].options[0]
 
-		await GlobalProcessStore.deleteProcess(value)
-			.then(async results => {
-				await interaction
-					.editReply({embeds: [MessageEmbed.execEmbed(results ? 'Exec success' : 'Not found pid')]})
-			})
+		switch (value) {
+			case 'git': createChildProcess('cd ../Bot_Lebowski && git pull', interaction).catch()
+				break
+			case 'start': startCommand()
+				break
+			case 'stop': checkProcess().then(pid => { createChildProcess(`kill ${pid}`, interaction) })
+				break
+		}
 
-	}
-
-	private async getLogger(interaction: CommandInteraction) {
-		await getRecentLog(interaction)
 	}
 }
 

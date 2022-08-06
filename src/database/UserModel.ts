@@ -12,6 +12,7 @@ class UserModel {
 		storage: 'discordLogger.sqlite',
 		logging: false,
 	})
+
 	private readonly User = {} as ModelCtor<Model<UserDataBaseModel>>
 
 	constructor() {

@@ -2,8 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getLogger = exports.getChildProcess = exports.exec = exports.deployCommands = exports.stopProcess = exports.stats = void 0;
 var execChoices = [
-    { name: 'Start Lebowski', value: 'python3 ../Bot_Lebowski/bot.py' },
-    { name: 'Get current dir list', value: 'ls' },
+    { name: 'Start Lebowski', value: 'start' },
+    { name: 'Stop Lebowski', value: 'stop' },
+    { name: 'Deploy from GitHub', value: 'git' },
 ];
 var stats = function (opt) {
     return opt.setName('stats')
@@ -21,7 +22,12 @@ var stopProcess = function (opt) {
 exports.stopProcess = stopProcess;
 var deployCommands = function (opt) {
     return opt.setName('deploy')
-        .setDescription('Deploy commands to current server');
+        .setDescription('Deploy commands to current server')
+        .addStringOption(function (opt) {
+        var _a;
+        return (_a = opt.setName('process'))
+            .addChoices.apply(_a, execChoices).setDescription('Deploy bot').setRequired(true);
+    });
 };
 exports.deployCommands = deployCommands;
 var getChildProcess = function (opt) {

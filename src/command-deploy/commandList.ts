@@ -2,8 +2,9 @@ import {SlashCommandSubcommandBuilder} from 'discord.js'
 import {APIApplicationCommandOptionChoice} from "discord-api-types/v9";
 
 const execChoices: APIApplicationCommandOptionChoice<string>[] = [
-	{ name: 'Start Lebowski', value: 'python3 ../Bot_Lebowski/bot.py' },
-	{ name: 'Get current dir list', value: 'ls' },
+	{ name: 'Start Lebowski', value: 'start' },
+	{ name: 'Stop Lebowski', value: 'stop' },
+	{ name: 'Deploy from GitHub', value: 'git' },
 ]
 
 
@@ -22,6 +23,8 @@ const stopProcess = (opt: SlashCommandSubcommandBuilder) =>
 const deployCommands = (opt: SlashCommandSubcommandBuilder) =>
 	opt.setName('deploy')
 		.setDescription('Deploy commands to current server')
+		.addStringOption(opt => opt.setName('process')
+			.addChoices(...execChoices).setDescription('Deploy bot').setRequired(true))
 
 const getChildProcess = (opt: SlashCommandSubcommandBuilder) =>
 	opt.setName('get_process')

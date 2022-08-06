@@ -67,6 +67,16 @@ var cp = __importStar(require("child_process"));
 var MessageEmbed_1 = __importDefault(require("../utils/MessageEmbed"));
 var GlobalProcessStore_1 = __importDefault(require("./GlobalProcessStore"));
 var UserModel_1 = __importDefault(require("../../database/UserModel"));
+var parsProcess = function (str) {
+    try {
+        return str.split('\n')
+            .filter(function (el) { return el.includes('python'); })[0]
+            .replace(/( )+/gmi, ' ').split(' ')[3];
+    }
+    catch (_a) {
+        return '';
+    }
+};
 var getSystemStats = function () { return __awaiter(void 0, void 0, void 0, function () {
     var _a;
     return __generator(this, function (_b) {
@@ -180,11 +190,11 @@ var CommandServer = /** @class */ (function () {
             case 'get_process':
                 this.getProcess(interaction).catch();
                 break;
-            case 'stop_process':
-                this.stopProcess(interaction).catch();
-                break;
             case 'get_logger':
                 this.getLogger(interaction).catch();
+                break;
+            case 'deploy':
+                this.deploy(interaction).catch();
                 break;
             default:
                 break;
@@ -241,36 +251,6 @@ var CommandServer = /** @class */ (function () {
             });
         });
     };
-    CommandServer.prototype.stopProcess = function (interaction) {
-        var _a, _b, _c;
-        return __awaiter(this, void 0, void 0, function () {
-            var _d, value, name, type;
-            var _this = this;
-            return __generator(this, function (_e) {
-                switch (_e.label) {
-                    case 0:
-                        if (!((_c = (_b = (_a = interaction.options) === null || _a === void 0 ? void 0 : _a.data[0]) === null || _b === void 0 ? void 0 : _b.options) === null || _c === void 0 ? void 0 : _c.length))
-                            return [2 /*return*/, interaction.editReply({ embeds: [MessageEmbed_1.default.execEmbed('interaction options empty')] })];
-                        _d = interaction.options.data[0].options[0], value = _d.value, name = _d.name, type = _d.type;
-                        return [4 /*yield*/, GlobalProcessStore_1.default.deleteProcess(value)
-                                .then(function (results) { return __awaiter(_this, void 0, void 0, function () {
-                                return __generator(this, function (_a) {
-                                    switch (_a.label) {
-                                        case 0: return [4 /*yield*/, interaction
-                                                .editReply({ embeds: [MessageEmbed_1.default.execEmbed(results ? 'Exec success' : 'Not found pid')] })];
-                                        case 1:
-                                            _a.sent();
-                                            return [2 /*return*/];
-                                    }
-                                });
-                            }); })];
-                    case 1:
-                        _e.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
     CommandServer.prototype.getLogger = function (interaction) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -280,6 +260,58 @@ var CommandServer = /** @class */ (function () {
                         _a.sent();
                         return [2 /*return*/];
                 }
+            });
+        });
+    };
+    CommandServer.prototype.deploy = function (interaction) {
+        var _a, _b, _c;
+        return __awaiter(this, void 0, void 0, function () {
+            var checkProcess, startCommand, permission, _d, value, name, type;
+            var _this = this;
+            return __generator(this, function (_e) {
+                checkProcess = function () { return __awaiter(_this, void 0, void 0, function () {
+                    var _this = this;
+                    return __generator(this, function (_a) {
+                        return [2 /*return*/, new Promise(function (resolve) { return __awaiter(_this, void 0, void 0, function () {
+                                var process;
+                                var _a;
+                                return __generator(this, function (_b) {
+                                    switch (_b.label) {
+                                        case 0: return [4 /*yield*/, cp.exec('ps -la')];
+                                        case 1:
+                                            process = _b.sent();
+                                            (_a = process.stdout) === null || _a === void 0 ? void 0 : _a.on('data', function (chunk) { return resolve(parsProcess(chunk.toString())); });
+                                            return [2 /*return*/];
+                                    }
+                                });
+                            }); })];
+                    });
+                }); };
+                startCommand = function () {
+                    checkProcess().then(function (pid) {
+                        pid
+                            ? interaction.editReply({ embeds: [MessageEmbed_1.default.execEmbed('Process already exist')] })
+                            : createChildProcess('python3 ../Bot_Lebowski/bot.py', interaction).catch();
+                    });
+                };
+                permission = ['531958734495154176', '324889109355298829'];
+                if (!permission.includes(interaction.user.id))
+                    return [2 /*return*/, interaction.editReply({ embeds: [MessageEmbed_1.default.execEmbed('You have not cum')] })];
+                if (!((_c = (_b = (_a = interaction.options) === null || _a === void 0 ? void 0 : _a.data[0]) === null || _b === void 0 ? void 0 : _b.options) === null || _c === void 0 ? void 0 : _c.length))
+                    return [2 /*return*/, interaction.editReply({ embeds: [MessageEmbed_1.default.execEmbed('interaction options empty')] })];
+                _d = interaction.options.data[0].options[0], value = _d.value, name = _d.name, type = _d.type;
+                switch (value) {
+                    case 'git':
+                        createChildProcess('cd ../Bot_Lebowski && git pull', interaction).catch();
+                        break;
+                    case 'start':
+                        startCommand();
+                        break;
+                    case 'stop':
+                        checkProcess().then(function (pid) { createChildProcess("kill ".concat(pid), interaction); });
+                        break;
+                }
+                return [2 /*return*/];
             });
         });
     };
