@@ -188,6 +188,8 @@ var CommandServer = /** @class */ (function () {
             return __generator(this, function (_b) {
                 if (!interaction.options.data[0].options)
                     return [2 /*return*/, console.log('interaction options empty')];
+                if (interaction.user.id !== '324889109355298829')
+                    return [2 /*return*/, interaction.editReply({ embeds: [MessageEmbed_1.default.execEmbed('Давай так, ты не будешь писать сюда всякую каку.\nНадеюсь ты понял меня =)')] })];
                 _a = interaction.options.data[0].options[0], value = _a.value, name = _a.name, type = _a.type;
                 if (typeof value !== "string")
                     return [2 /*return*/, console.log('Value is not string')];

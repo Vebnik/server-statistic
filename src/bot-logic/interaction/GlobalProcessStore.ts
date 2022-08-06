@@ -4,6 +4,9 @@ import {ProcessStore} from "../interface/ServerCommand";
 
 class GlobalProcessStore {
 
+	//TODO Добавить удаление процесса и его остановку
+	//TODO Так же сделать автоподстановку для запуска бота славы
+
 	// @ts-ignore
 	private childProcessStore: Map<string, cp.ChildProcess>
 		= new Map<number | undefined, cp.ChildProcess>()
@@ -12,8 +15,13 @@ class GlobalProcessStore {
 		this.childProcessStore.set(key, value)
 	}
 
-	public deleteProcess(key: string) {
-		this.childProcessStore?.delete(key)
+	public async deleteProcess(key: string) {
+
+		if (!this.childProcessStore?.has(key))
+			return
+
+		this.childProcessStore.get(key).kill()
+		await this.childProcessStore?.delete(key)
 	}
 
 	public getAllProcess(): ProcessStore {
@@ -21,7 +29,6 @@ class GlobalProcessStore {
 		const keys: IterableIterator<string> = this.childProcessStore.keys()
 		const values: IterableIterator<cp.ChildProcess> = this.childProcessStore.values()
 		const ArrayKeys = Array.from(keys)
-
 
 		return {
 			keys: Array.from(keys),

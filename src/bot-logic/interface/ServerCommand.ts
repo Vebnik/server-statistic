@@ -3,7 +3,6 @@ import CpuData = Systeminformation.CpuData;
 import MemData = Systeminformation.MemData;
 import OsData = Systeminformation.OsData;
 import NetworkInterfacesData = Systeminformation.NetworkInterfacesData;
-import * as cp from 'child_process'
 
 
 export interface ServerStats {
