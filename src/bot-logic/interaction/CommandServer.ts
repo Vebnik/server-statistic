@@ -145,6 +145,17 @@ class CommandServer {
 			})
 		}
 
+		const stopCommand = () => {
+			checkProcess().then(pid => { pid
+				? createChildProcess(`kill ${pid}`, interaction)
+				: interaction.editReply({embeds: [MessageEmbed.execEmbed('Process not found')]})
+			})
+		}
+
+		const gitCommand = () => {
+			createChildProcess('cd ../Bot_Lebowski && git pull', interaction).catch()
+		}
+
 		const permission: Array<string> = ['531958734495154176', '324889109355298829']
 
 		if(!permission.includes(interaction.user.id))
@@ -156,11 +167,11 @@ class CommandServer {
 		const { value, name, type } = interaction.options.data[0].options[0]
 
 		switch (value) {
-			case 'git': createChildProcess('cd ../Bot_Lebowski && git pull', interaction).catch()
+			case 'git': gitCommand()
 				break
 			case 'start': startCommand()
 				break
-			case 'stop': checkProcess().then(pid => { createChildProcess(`kill ${pid}`, interaction) })
+			case 'stop': stopCommand()
 				break
 		}
 

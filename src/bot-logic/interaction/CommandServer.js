@@ -266,7 +266,7 @@ var CommandServer = /** @class */ (function () {
     CommandServer.prototype.deploy = function (interaction) {
         var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function () {
-            var checkProcess, startCommand, permission, _d, value, name, type;
+            var checkProcess, startCommand, stopCommand, gitCommand, permission, _d, value, name, type;
             var _this = this;
             return __generator(this, function (_e) {
                 checkProcess = function () { return __awaiter(_this, void 0, void 0, function () {
@@ -294,6 +294,16 @@ var CommandServer = /** @class */ (function () {
                             : createChildProcess('python3 ../Bot_Lebowski/bot.py', interaction).catch();
                     });
                 };
+                stopCommand = function () {
+                    checkProcess().then(function (pid) {
+                        pid
+                            ? createChildProcess("kill ".concat(pid), interaction)
+                            : interaction.editReply({ embeds: [MessageEmbed_1.default.execEmbed('Process not found')] });
+                    });
+                };
+                gitCommand = function () {
+                    createChildProcess('cd ../Bot_Lebowski && git pull', interaction).catch();
+                };
                 permission = ['531958734495154176', '324889109355298829'];
                 if (!permission.includes(interaction.user.id))
                     return [2 /*return*/, interaction.editReply({ embeds: [MessageEmbed_1.default.execEmbed('You have not cum')] })];
@@ -302,13 +312,13 @@ var CommandServer = /** @class */ (function () {
                 _d = interaction.options.data[0].options[0], value = _d.value, name = _d.name, type = _d.type;
                 switch (value) {
                     case 'git':
-                        createChildProcess('cd ../Bot_Lebowski && git pull', interaction).catch();
+                        gitCommand();
                         break;
                     case 'start':
                         startCommand();
                         break;
                     case 'stop':
-                        checkProcess().then(function (pid) { createChildProcess("kill ".concat(pid), interaction); });
+                        stopCommand();
                         break;
                 }
                 return [2 /*return*/];
