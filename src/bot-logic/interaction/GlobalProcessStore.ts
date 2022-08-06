@@ -20,7 +20,7 @@ class GlobalProcessStore {
 		const prom = new Promise(resolve => {
 			this.childProcessStore.forEach((value, key1) => {
 				if (key1.includes(key)) {
-					value.kill('SIGHUP')
+					value.kill(2)
 					this.childProcessStore?.delete(key1)
 					resolve(true)
 				}
