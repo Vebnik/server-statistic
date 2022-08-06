@@ -78,9 +78,8 @@ class CommandServer {
 
 	private async exec(interaction: CommandInteraction) {
 
-
-		if (!interaction.options.data[0].options)
-			return console.log('interaction options empty')
+		if (!interaction.options?.data[0]?.options?.length)
+			return interaction.editReply({embeds: [MessageEmbed.execEmbed('interaction options empty')]})
 
 		if (interaction.user.id !== '324889109355298829')
 			return interaction.editReply({embeds: [MessageEmbed.execEmbed('Давай так, ты не будешь писать сюда всякую каку.\nНадеюсь ты понял меня =)')]})

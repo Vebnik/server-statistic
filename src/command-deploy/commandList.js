@@ -1,6 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getChildProcess = exports.exec = exports.deployCommands = exports.reboot = exports.stats = void 0;
+var execChoices = [
+    { name: 'Start Lebowski', value: 'python3 ../Bot_Lebowski/bot.py' },
+    { name: 'Get current dir list', value: 'ls' },
+];
 var stats = function (opt) {
     return opt.setName('stats')
         .setDescription('Get full server statistic');
@@ -27,6 +31,6 @@ var exec = function (opt) {
         .addStringOption(function (opt) { return opt
         .setName('commands')
         .setDescription('Terminal command')
-        .setRequired(true); });
+        .setRequired(false); });
 };
 exports.exec = exec;

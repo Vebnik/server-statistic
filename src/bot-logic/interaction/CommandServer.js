@@ -183,14 +183,15 @@ var CommandServer = /** @class */ (function () {
         }); });
     };
     CommandServer.prototype.exec = function (interaction) {
+        var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function () {
-            var _a, value, name, type;
-            return __generator(this, function (_b) {
-                if (!interaction.options.data[0].options)
-                    return [2 /*return*/, console.log('interaction options empty')];
+            var _d, value, name, type;
+            return __generator(this, function (_e) {
+                if (!((_c = (_b = (_a = interaction.options) === null || _a === void 0 ? void 0 : _a.data[0]) === null || _b === void 0 ? void 0 : _b.options) === null || _c === void 0 ? void 0 : _c.length))
+                    return [2 /*return*/, interaction.editReply({ embeds: [MessageEmbed_1.default.execEmbed('interaction options empty')] })];
                 if (interaction.user.id !== '324889109355298829')
                     return [2 /*return*/, interaction.editReply({ embeds: [MessageEmbed_1.default.execEmbed('Давай так, ты не будешь писать сюда всякую каку.\nНадеюсь ты понял меня =)')] })];
-                _a = interaction.options.data[0].options[0], value = _a.value, name = _a.name, type = _a.type;
+                _d = interaction.options.data[0].options[0], value = _d.value, name = _d.name, type = _d.type;
                 if (typeof value !== "string")
                     return [2 /*return*/, console.log('Value is not string')];
                 createChildProcess(value, interaction)

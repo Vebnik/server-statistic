@@ -1,4 +1,10 @@
 import {SlashCommandSubcommandBuilder} from 'discord.js'
+import {APIApplicationCommandOptionChoice} from "discord-api-types/v9";
+
+const execChoices: APIApplicationCommandOptionChoice<string>[] = [
+	{ name: 'Start Lebowski', value: 'python3 ../Bot_Lebowski/bot.py' },
+	{ name: 'Get current dir list', value: 'ls' },
+]
 
 
 const stats = (opt: SlashCommandSubcommandBuilder) =>
@@ -23,7 +29,7 @@ const exec = (opt: SlashCommandSubcommandBuilder) =>
 		.addStringOption(opt => opt
 			.setName('commands')
 			.setDescription('Terminal command')
-			.setRequired(true))
+			.setRequired(false))
 
 
 export {
