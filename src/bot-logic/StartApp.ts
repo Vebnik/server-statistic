@@ -1,6 +1,7 @@
 import {Client, Message} from "discord.js";
 import EventHandler from "./EventHandler";
 import ErrorHandler from './utils/ErrorHandler'
+import InteractionLogger from "./utils/InteractionLogger";
 
 class StartApp {
 
@@ -20,6 +21,9 @@ class StartApp {
 		client.on('interactionCreate', interaction => {
 
 			if (interaction.isCommand()) {
+
+				InteractionLogger.logger(interaction).catch()
+
 				EventHandler.interacionCommand(interaction, client)
 					.catch(err => ErrorHandler.interactionError(err))
 				return;

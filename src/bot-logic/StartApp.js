@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var EventHandler_1 = __importDefault(require("./EventHandler"));
 var ErrorHandler_1 = __importDefault(require("./utils/ErrorHandler"));
+var InteractionLogger_1 = __importDefault(require("./utils/InteractionLogger"));
 var StartApp = /** @class */ (function () {
     function StartApp() {
     }
@@ -23,6 +24,7 @@ var StartApp = /** @class */ (function () {
     StartApp.prototype.onInteraction = function (client) {
         client.on('interactionCreate', function (interaction) {
             if (interaction.isCommand()) {
+                InteractionLogger_1.default.logger(interaction).catch();
                 EventHandler_1.default.interacionCommand(interaction, client)
                     .catch(function (err) { return ErrorHandler_1.default.interactionError(err); });
                 return;

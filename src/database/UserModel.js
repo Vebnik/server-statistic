@@ -36,49 +36,40 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var GlobalProcessStore = /** @class */ (function () {
-    function GlobalProcessStore() {
-        // @ts-ignore
-        this.childProcessStore = new Map();
+var sequelize_1 = require("sequelize");
+var UserModel = /** @class */ (function () {
+    function UserModel() {
+        this.sequelize = new sequelize_1.Sequelize({
+            dialect: 'sqlite',
+            storage: 'discordLogger.sqlite',
+            logging: false,
+        });
+        this.User = {};
+        this.User = this.sequelize.define('User', {
+            username: {
+                allowNull: true,
+                type: sequelize_1.DataTypes.STRING,
+            },
+            interaction: {
+                allowNull: true,
+                type: sequelize_1.DataTypes.STRING
+            }
+        }, {
+            freezeTableName: true
+        });
     }
-    GlobalProcessStore.prototype.setNewProcess = function (key, value) {
-        this.childProcessStore.set(key, value);
-    };
-    GlobalProcessStore.prototype.deleteProcess = function (key) {
+    UserModel.prototype.getUserModel = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var prom;
-            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        prom = new Promise(function (resolve) {
-                            _this.childProcessStore.forEach(function (value, key1) {
-                                var _a;
-                                if (key1.includes(key)) {
-                                    value.kill(9);
-                                    (_a = _this.childProcessStore) === null || _a === void 0 ? void 0 : _a.delete(key1);
-                                    resolve(true);
-                                }
-                            });
-                            resolve(false);
-                        });
-                        return [4 /*yield*/, Promise.all([prom])];
+                    case 0: return [4 /*yield*/, this.User.sync({ alter: true })];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/, prom];
+                        return [2 /*return*/, this.User];
                 }
             });
         });
     };
-    GlobalProcessStore.prototype.getAllProcess = function () {
-        var keys = this.childProcessStore.keys();
-        var values = this.childProcessStore.values();
-        var ArrayKeys = Array.from(keys);
-        return {
-            keys: Array.from(keys),
-            values: Array.from(values).map(function (el, i) { return "".concat(ArrayKeys[i], " ").concat(String(el.eventNames().toString())); })
-        };
-    };
-    return GlobalProcessStore;
+    return UserModel;
 }());
-exports.default = new GlobalProcessStore();
+exports.default = new UserModel();

@@ -4,9 +4,6 @@ import {ProcessStore} from "../interface/ServerCommand";
 
 class GlobalProcessStore {
 
-	//TODO Добавить удаление процесса и его остановку
-	//TODO Так же сделать автоподстановку для запуска бота славы
-
 	// @ts-ignore
 	private childProcessStore: Map<string, cp.ChildProcess>
 		= new Map<number | undefined, cp.ChildProcess>()

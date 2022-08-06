@@ -35,50 +35,46 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var GlobalProcessStore = /** @class */ (function () {
-    function GlobalProcessStore() {
-        // @ts-ignore
-        this.childProcessStore = new Map();
+var UserModel_1 = __importDefault(require("../../database/UserModel"));
+var ErrorHandler_1 = __importDefault(require("./ErrorHandler"));
+var InteractionLogger = /** @class */ (function () {
+    function InteractionLogger() {
     }
-    GlobalProcessStore.prototype.setNewProcess = function (key, value) {
-        this.childProcessStore.set(key, value);
-    };
-    GlobalProcessStore.prototype.deleteProcess = function (key) {
+    InteractionLogger.prototype.logger = function (interaction) {
         return __awaiter(this, void 0, void 0, function () {
-            var prom;
-            var _this = this;
+            var User;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        prom = new Promise(function (resolve) {
-                            _this.childProcessStore.forEach(function (value, key1) {
-                                var _a;
-                                if (key1.includes(key)) {
-                                    value.kill(9);
-                                    (_a = _this.childProcessStore) === null || _a === void 0 ? void 0 : _a.delete(key1);
-                                    resolve(true);
-                                }
-                            });
-                            resolve(false);
-                        });
-                        return [4 /*yield*/, Promise.all([prom])];
+                    case 0: return [4 /*yield*/, UserModel_1.default.getUserModel()];
                     case 1:
-                        _a.sent();
-                        return [2 /*return*/, prom];
+                        User = _a.sent();
+                        User.create({
+                            username: interaction.user.username,
+                            interaction: JSON.stringify(InteractionLogger.parsInteractionInfo(interaction), null, 2)
+                        })
+                            .then(function () { return User.sync({ alter: true }); })
+                            .then(function () { return console.log('Logged interaction'); })
+                            .catch(function (err) { return ErrorHandler_1.default.interactionError(err); });
+                        return [2 /*return*/];
                 }
             });
         });
     };
-    GlobalProcessStore.prototype.getAllProcess = function () {
-        var keys = this.childProcessStore.keys();
-        var values = this.childProcessStore.values();
-        var ArrayKeys = Array.from(keys);
+    InteractionLogger.parsInteractionInfo = function (interaction) {
         return {
-            keys: Array.from(keys),
-            values: Array.from(values).map(function (el, i) { return "".concat(ArrayKeys[i], " ").concat(String(el.eventNames().toString())); })
+            type: interaction.type.toString(),
+            client: interaction.applicationId,
+            createdAt: interaction.createdAt,
+            id: interaction.id,
+            channel: interaction.channelId,
+            guildId: interaction.guildId,
+            option: interaction.options.data
         };
     };
-    return GlobalProcessStore;
+    return InteractionLogger;
 }());
-exports.default = new GlobalProcessStore();
+exports.default = new InteractionLogger();
