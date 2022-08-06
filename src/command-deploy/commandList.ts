@@ -27,6 +27,10 @@ const getChildProcess = (opt: SlashCommandSubcommandBuilder) =>
 	opt.setName('get_process')
 		.setDescription('Show all child process')
 
+const getLogger = (opt: SlashCommandSubcommandBuilder) =>
+	opt.setName('get_logger')
+		.setDescription('Show all recent log in logger')
+
 const exec = (opt: SlashCommandSubcommandBuilder) =>
 	opt.setName('exec')
 		.setDescription('exec commands')
@@ -41,7 +45,8 @@ export {
 	stopProcess,
 	deployCommands,
 	exec,
-	getChildProcess
+	getChildProcess,
+	getLogger
 }
 
 

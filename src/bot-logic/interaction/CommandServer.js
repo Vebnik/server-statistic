@@ -66,7 +66,7 @@ var systeminformation_1 = __importDefault(require("systeminformation"));
 var cp = __importStar(require("child_process"));
 var MessageEmbed_1 = __importDefault(require("../utils/MessageEmbed"));
 var GlobalProcessStore_1 = __importDefault(require("./GlobalProcessStore"));
-var GlobalProcessStore_2 = __importDefault(require("./GlobalProcessStore"));
+var UserModel_1 = __importDefault(require("../../database/UserModel"));
 var getSystemStats = function () { return __awaiter(void 0, void 0, void 0, function () {
     var _a;
     return __generator(this, function (_b) {
@@ -147,6 +147,24 @@ var createChildProcess = function (value, interaction) { return __awaiter(void 0
         }
     });
 }); };
+var getRecentLog = function (interaction) { return __awaiter(void 0, void 0, void 0, function () {
+    var User, allLog, parsLog;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, UserModel_1.default.getUserModel()];
+            case 1:
+                User = _a.sent();
+                return [4 /*yield*/, User.findAll()];
+            case 2:
+                allLog = _a.sent();
+                parsLog = allLog.map(function (el) { var _a, _b, _c, _d, _e, _f, _g, _h, _j; return "".concat((_a = el === null || el === void 0 ? void 0 : el.dataValues) === null || _a === void 0 ? void 0 : _a.id, " ").concat((_b = el === null || el === void 0 ? void 0 : el.dataValues) === null || _b === void 0 ? void 0 : _b.username, " ").concat(((_e = (_d = JSON.parse((_c = el === null || el === void 0 ? void 0 : el.dataValues) === null || _c === void 0 ? void 0 : _c.interaction)) === null || _d === void 0 ? void 0 : _d.option[0]) === null || _e === void 0 ? void 0 : _e.name) || 'No Data', " ").concat(((_j = (_h = (_g = JSON.parse((_f = el === null || el === void 0 ? void 0 : el.dataValues) === null || _f === void 0 ? void 0 : _f.interaction)) === null || _g === void 0 ? void 0 : _g.option[0]) === null || _h === void 0 ? void 0 : _h.options[0]) === null || _j === void 0 ? void 0 : _j.value) || 'No Data'); });
+                return [4 /*yield*/, interaction.editReply({ embeds: [MessageEmbed_1.default.execEmbed(parsLog.join('\n'))] })];
+            case 3:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); };
 var CommandServer = /** @class */ (function () {
     function CommandServer() {
     }
@@ -164,6 +182,9 @@ var CommandServer = /** @class */ (function () {
                 break;
             case 'stop_process':
                 this.stopProcess(interaction).catch();
+                break;
+            case 'get_logger':
+                this.getLogger(interaction).catch();
                 break;
             default:
                 break;
@@ -209,7 +230,7 @@ var CommandServer = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        data = GlobalProcessStore_2.default.getAllProcess().values.join('\n');
+                        data = GlobalProcessStore_1.default.getAllProcess().values.join('\n');
                         embed = MessageEmbed_1.default.execEmbed(data);
                         return [4 /*yield*/, interaction
                                 .editReply({ embeds: [embed] })];
@@ -231,7 +252,7 @@ var CommandServer = /** @class */ (function () {
                         if (!((_c = (_b = (_a = interaction.options) === null || _a === void 0 ? void 0 : _a.data[0]) === null || _b === void 0 ? void 0 : _b.options) === null || _c === void 0 ? void 0 : _c.length))
                             return [2 /*return*/, interaction.editReply({ embeds: [MessageEmbed_1.default.execEmbed('interaction options empty')] })];
                         _d = interaction.options.data[0].options[0], value = _d.value, name = _d.name, type = _d.type;
-                        return [4 /*yield*/, GlobalProcessStore_2.default.deleteProcess(value)
+                        return [4 /*yield*/, GlobalProcessStore_1.default.deleteProcess(value)
                                 .then(function (results) { return __awaiter(_this, void 0, void 0, function () {
                                 return __generator(this, function (_a) {
                                     switch (_a.label) {
@@ -245,6 +266,18 @@ var CommandServer = /** @class */ (function () {
                             }); })];
                     case 1:
                         _e.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    CommandServer.prototype.getLogger = function (interaction) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, getRecentLog(interaction)];
+                    case 1:
+                        _a.sent();
                         return [2 /*return*/];
                 }
             });

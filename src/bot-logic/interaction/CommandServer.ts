@@ -4,7 +4,7 @@ import * as cp from 'child_process'
 import MessageEmbed from "../utils/MessageEmbed";
 import {ServerStats} from "../interface/ServerCommand";
 import GlobalProcessStore from "./GlobalProcessStore";
-import globalProcessStore from "./GlobalProcessStore";
+import UserModel from "../../database/UserModel";
 
 
 
@@ -49,6 +49,15 @@ const createChildProcess = async (value: string, interaction: CommandInteraction
 	}
 }
 
+const getRecentLog = async (interaction: CommandInteraction) => {
+	const User = await UserModel.getUserModel()
+	const allLog = await User.findAll()
+
+	const parsLog = allLog.map(el =>
+		`${el?.dataValues?.id} ${el?.dataValues?.username} ${JSON.parse(el?.dataValues?.interaction)?.option[0]?.name || 'No Data'} ${JSON.parse(el?.dataValues?.interaction)?.option[0]?.options[0]?.value || 'No Data'}`)
+
+	await interaction.editReply({embeds: [MessageEmbed.execEmbed(parsLog.join('\n'))]})
+}
 
 class CommandServer {
 
@@ -65,6 +74,8 @@ class CommandServer {
 			case 'get_process': this.getProcess(interaction).catch()
 				break
 			case 'stop_process': this.stopProcess(interaction).catch()
+				break
+			case 'get_logger': this.getLogger(interaction).catch()
 				break
 			default:
 				break;
@@ -97,7 +108,7 @@ class CommandServer {
 
 	private async getProcess(interaction: CommandInteraction) {
 
-		const data = globalProcessStore.getAllProcess().values.join('\n')
+		const data = GlobalProcessStore.getAllProcess().values.join('\n')
 		const embed = MessageEmbed.execEmbed(data)
 
 		await interaction
@@ -111,12 +122,16 @@ class CommandServer {
 
 		const { value, name, type } = interaction.options.data[0].options[0]
 
-		await globalProcessStore.deleteProcess(value)
+		await GlobalProcessStore.deleteProcess(value)
 			.then(async results => {
 				await interaction
 					.editReply({embeds: [MessageEmbed.execEmbed(results ? 'Exec success' : 'Not found pid')]})
 			})
 
+	}
+
+	private async getLogger(interaction: CommandInteraction) {
+		await getRecentLog(interaction)
 	}
 }
 

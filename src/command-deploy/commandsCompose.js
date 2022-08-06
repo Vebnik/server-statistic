@@ -8,4 +8,5 @@ exports.commands = new discord_js_1.SlashCommandBuilder().setName('server').setD
     .addSubcommand(function (opt) { return (0, commandList_1.stopProcess)(opt); })
     .addSubcommand(function (opt) { return (0, commandList_1.deployCommands)(opt); })
     .addSubcommand(function (opt) { return (0, commandList_1.exec)(opt); })
-    .addSubcommand(function (opt) { return (0, commandList_1.getChildProcess)(opt); });
+    .addSubcommand(function (opt) { return (0, commandList_1.getChildProcess)(opt); })
+    .addSubcommand(function (opt) { return (0, commandList_1.getLogger)(opt); });

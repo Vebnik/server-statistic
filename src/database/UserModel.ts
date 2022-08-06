@@ -1,7 +1,7 @@
 import {Sequelize, Model, DataTypes, ModelCtor} from 'sequelize'
 
 
-interface UserDataBaseModel {
+export interface UserDataBaseModel {
 	username: string
 	interaction: string
 }

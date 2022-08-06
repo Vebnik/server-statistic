@@ -1,10 +1,4 @@
-import {
-	CacheType,
-	CommandInteraction,
-	CommandInteractionOption,
-	CommandInteractionOptionResolver,
-	Interaction
-} from "discord.js";
+import {CommandInteraction,} from "discord.js";
 import UserModel from "../../database/UserModel";
 import ErrorHandler from "./ErrorHandler";
 
@@ -13,8 +7,8 @@ export interface InteractionPars {
 	client: string
 	createdAt: Date
 	id: string
-	channel: string|null
-	guildId: string|null
+	channel: string | null
+	guildId: string | null
 	option: object
 }
 

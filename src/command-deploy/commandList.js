@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getChildProcess = exports.exec = exports.deployCommands = exports.stopProcess = exports.stats = void 0;
+exports.getLogger = exports.getChildProcess = exports.exec = exports.deployCommands = exports.stopProcess = exports.stats = void 0;
 var execChoices = [
     { name: 'Start Lebowski', value: 'python3 ../Bot_Lebowski/bot.py' },
     { name: 'Get current dir list', value: 'ls' },
@@ -29,6 +29,11 @@ var getChildProcess = function (opt) {
         .setDescription('Show all child process');
 };
 exports.getChildProcess = getChildProcess;
+var getLogger = function (opt) {
+    return opt.setName('get_logger')
+        .setDescription('Show all recent log in logger');
+};
+exports.getLogger = getLogger;
 var exec = function (opt) {
     return opt.setName('exec')
         .setDescription('exec commands')
