@@ -57,7 +57,7 @@ var GlobalProcessStore = /** @class */ (function () {
                             _this.childProcessStore.forEach(function (value, key1) {
                                 var _a;
                                 if (key1.includes(key)) {
-                                    value.kill();
+                                    value.kill('SIGHUP');
                                     (_a = _this.childProcessStore) === null || _a === void 0 ? void 0 : _a.delete(key1);
                                     resolve(true);
                                 }
