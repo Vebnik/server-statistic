@@ -15,10 +15,10 @@ class GlobalProcessStore {
 		this.childProcessStore.set(key, value)
 	}
 
-	public async deleteProcess(key: string) {
+	public async deleteProcess(key: any) {
 
-		if (!this.childProcessStore?.has(key))
-			return
+		if (!this.childProcessStore.get(key))
+			return console.log('Not have process')
 
 		this.childProcessStore.get(key).kill()
 		await this.childProcessStore?.delete(key)

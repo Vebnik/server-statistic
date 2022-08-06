@@ -47,17 +47,17 @@ var GlobalProcessStore = /** @class */ (function () {
         this.childProcessStore.set(key, value);
     };
     GlobalProcessStore.prototype.deleteProcess = function (key) {
-        var _a, _b;
+        var _a;
         return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_c) {
-                switch (_c.label) {
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        if (!((_a = this.childProcessStore) === null || _a === void 0 ? void 0 : _a.has(key)))
-                            return [2 /*return*/];
+                        if (!this.childProcessStore.get(key))
+                            return [2 /*return*/, console.log('Not have process')];
                         this.childProcessStore.get(key).kill();
-                        return [4 /*yield*/, ((_b = this.childProcessStore) === null || _b === void 0 ? void 0 : _b.delete(key))];
+                        return [4 /*yield*/, ((_a = this.childProcessStore) === null || _a === void 0 ? void 0 : _a.delete(key))];
                     case 1:
-                        _c.sent();
+                        _b.sent();
                         return [2 /*return*/];
                 }
             });

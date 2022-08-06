@@ -11,9 +11,13 @@ const stats = (opt: SlashCommandSubcommandBuilder) =>
 	opt.setName('stats')
 		.setDescription('Get full server statistic')
 
-const reboot = (opt: SlashCommandSubcommandBuilder) =>
-	opt.setName('reboot')
-		.setDescription('Reboot server and startup all process')
+const stopProcess = (opt: SlashCommandSubcommandBuilder) =>
+	opt.setName('stop_process')
+		.setDescription('')
+		.addIntegerOption(opt => opt
+			.setName('pid')
+			.setDescription('process id')
+			.setRequired(true))
 
 const deployCommands = (opt: SlashCommandSubcommandBuilder) =>
 	opt.setName('deploy')
@@ -34,7 +38,7 @@ const exec = (opt: SlashCommandSubcommandBuilder) =>
 
 export {
 	stats,
-	reboot,
+	stopProcess,
 	deployCommands,
 	exec,
 	getChildProcess

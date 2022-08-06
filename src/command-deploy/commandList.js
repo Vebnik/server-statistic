@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getChildProcess = exports.exec = exports.deployCommands = exports.reboot = exports.stats = void 0;
+exports.getChildProcess = exports.exec = exports.deployCommands = exports.stopProcess = exports.stats = void 0;
 var execChoices = [
     { name: 'Start Lebowski', value: 'python3 ../Bot_Lebowski/bot.py' },
     { name: 'Get current dir list', value: 'ls' },
@@ -10,11 +10,15 @@ var stats = function (opt) {
         .setDescription('Get full server statistic');
 };
 exports.stats = stats;
-var reboot = function (opt) {
-    return opt.setName('reboot')
-        .setDescription('Reboot server and startup all process');
+var stopProcess = function (opt) {
+    return opt.setName('stop_process')
+        .setDescription('')
+        .addIntegerOption(function (opt) { return opt
+        .setName('pid')
+        .setDescription('process id')
+        .setRequired(true); });
 };
-exports.reboot = reboot;
+exports.stopProcess = stopProcess;
 var deployCommands = function (opt) {
     return opt.setName('deploy')
         .setDescription('Deploy commands to current server');

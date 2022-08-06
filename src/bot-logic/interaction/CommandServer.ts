@@ -64,6 +64,8 @@ class CommandServer {
 				break
 			case 'get_process': this.getProcess(interaction).catch()
 				break
+			case 'stop_process': this.stopProcess(interaction).catch()
+				break
 			default:
 				break;
 		}
@@ -100,6 +102,19 @@ class CommandServer {
 
 		await interaction
 			.editReply({embeds: [embed]})
+	}
+
+	private async stopProcess(interaction: CommandInteraction) {
+
+		if (!interaction.options?.data[0]?.options?.length)
+			return interaction.editReply({embeds: [MessageEmbed.execEmbed('interaction options empty')]})
+
+		const { value, name, type } = interaction.options.data[0].options[0]
+
+		await globalProcessStore.deleteProcess(value)
+
+		await interaction
+			.editReply({embeds: [MessageEmbed.execEmbed('interaction options empty')]})
 	}
 }
 
