@@ -22,7 +22,6 @@ class InteractionLogger {
 			username: interaction.user.username,
 			interaction: JSON.stringify(InteractionLogger.parsInteractionInfo(interaction), null, 2)
 		})
-			.then(() => User.sync({alter: true}))
 			.then(() => console.log('Logged interaction'))
 			.catch(err => ErrorHandler.interactionError(err))
 	}

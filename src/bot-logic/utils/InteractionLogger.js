@@ -56,7 +56,6 @@ var InteractionLogger = /** @class */ (function () {
                             username: interaction.user.username,
                             interaction: JSON.stringify(InteractionLogger.parsInteractionInfo(interaction), null, 2)
                         })
-                            .then(function () { return User.sync({ alter: true }); })
                             .then(function () { return console.log('Logged interaction'); })
                             .catch(function (err) { return ErrorHandler_1.default.interactionError(err); });
                         return [2 /*return*/];
