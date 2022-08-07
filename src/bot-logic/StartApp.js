@@ -41,7 +41,7 @@ var StartApp = /** @class */ (function () {
     StartApp.prototype.onReady = function (client) {
         // status
         if (client.user)
-            client.user.setPresence({ activities: [{ name: 'Watch server process' }], status: 'idle' });
+            client.user.setPresence({ activities: [{ name: 'Watch server process' }], status: 'dnd' });
     };
     return StartApp;
 }());
