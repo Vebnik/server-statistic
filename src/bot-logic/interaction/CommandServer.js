@@ -66,7 +66,7 @@ var systeminformation_1 = __importDefault(require("systeminformation"));
 var cp = __importStar(require("child_process"));
 var MessageEmbed_1 = __importDefault(require("../utils/MessageEmbed"));
 var UserModel_1 = __importDefault(require("../../database/UserModel"));
-//TODO Переписать getProcess для получения инфы через exec('ps -la') с логикой парса как в parsProcess
+//TODO Отслеживание краша main проецсса и перезапуск бота
 var parsProcess = function (str) {
     try {
         return str.split('\n')

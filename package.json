@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node -r dotenv/config src/index.js",
+    "worker_start": "node -r dotenv/config workerThread.js",
     "deployCommand_dev": "node -r dotenv/config src/command-deploy/deployCommand.js -g '1001124137009422356' ",
     "deployCommand_prod": "node -r dotenv/config src/command-deploy/deployCommand.js -g '884380677141831730' "
   },

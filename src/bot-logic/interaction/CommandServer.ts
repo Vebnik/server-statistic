@@ -5,7 +5,7 @@ import MessageEmbed from "../utils/MessageEmbed";
 import {ServerStats} from "../interface/ServerCommand";
 import UserModel from "../../database/UserModel";
 
-//TODO Переписать getProcess для получения инфы через exec('ps -la') с логикой парса как в parsProcess
+//TODO Отслеживание краша main проецсса и перезапуск бота
 
 const parsProcess = (str: string): string => {
 	try {

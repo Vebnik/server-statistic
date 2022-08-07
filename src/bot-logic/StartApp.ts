@@ -40,7 +40,6 @@ class StartApp {
 	}
 
 	private onReady(client: Client) {
-
 		// status
 		if (client.user)
 			client.user.setPresence({activities: [{name: 'Watch server process'}], status: 'dnd'})
