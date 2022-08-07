@@ -61,12 +61,8 @@ var UserModel = /** @class */ (function () {
     UserModel.prototype.getUserModel = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.User.sync({ alter: true })];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/, this.User];
-                }
+                //await this.User.sync({alter: true})
+                return [2 /*return*/, this.User];
             });
         });
     };
