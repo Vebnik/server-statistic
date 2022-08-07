@@ -63,6 +63,8 @@ const getRecentLog = async (interaction: CommandInteraction) => {
 	const User = await UserModel.getUserModel()
 	const allLog = await User.findAll()
 
+	console.log(allLog)
+
 	const parsLog = allLog.map(el =>
 		`${el?.dataValues?.id} ${el?.dataValues?.username} ${JSON.parse(el?.dataValues?.interaction)?.option[0]?.name || 'No Data'} ${JSON.parse(el?.dataValues?.interaction)?.option[0]?.options[0]?.value || 'No Data'}`)
 

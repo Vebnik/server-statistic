@@ -168,6 +168,7 @@ var getRecentLog = function (interaction) { return __awaiter(void 0, void 0, voi
                 return [4 /*yield*/, User.findAll()];
             case 2:
                 allLog = _a.sent();
+                console.log(allLog);
                 parsLog = allLog.map(function (el) { var _a, _b, _c, _d, _e, _f, _g, _h, _j; return "".concat((_a = el === null || el === void 0 ? void 0 : el.dataValues) === null || _a === void 0 ? void 0 : _a.id, " ").concat((_b = el === null || el === void 0 ? void 0 : el.dataValues) === null || _b === void 0 ? void 0 : _b.username, " ").concat(((_e = (_d = JSON.parse((_c = el === null || el === void 0 ? void 0 : el.dataValues) === null || _c === void 0 ? void 0 : _c.interaction)) === null || _d === void 0 ? void 0 : _d.option[0]) === null || _e === void 0 ? void 0 : _e.name) || 'No Data', " ").concat(((_j = (_h = (_g = JSON.parse((_f = el === null || el === void 0 ? void 0 : el.dataValues) === null || _f === void 0 ? void 0 : _f.interaction)) === null || _g === void 0 ? void 0 : _g.option[0]) === null || _h === void 0 ? void 0 : _h.options[0]) === null || _j === void 0 ? void 0 : _j.value) || 'No Data'); });
                 return [4 /*yield*/, interaction.editReply({ embeds: [MessageEmbed_1.default.execEmbed(parsLog.join('\n'))] })];
             case 3:
