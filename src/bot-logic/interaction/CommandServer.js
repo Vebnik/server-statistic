@@ -297,7 +297,7 @@ var CommandServer = /** @class */ (function () {
                             ? interaction.editReply({ embeds: [MessageEmbed_1.default.execEmbed('Process already exist')] })
                             : createChildProcess('python3 ../Bot_Lebowski/bot.py', interaction).catch();
                     });
-                    setInterval(function () { return restartApp(); }, 60 * 1000);
+                    setInterval(function () { return restartApp(); }, 6 * 3600 * 1000);
                 };
                 stopCommand = function () {
                     checkProcess().then(function (pid) {

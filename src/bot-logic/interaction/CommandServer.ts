@@ -156,7 +156,7 @@ class CommandServer {
 				: createChildProcess('python3 ../Bot_Lebowski/bot.py', interaction).catch()
 			})
 
-			setInterval(() => restartApp(), 60*1000)
+			setInterval(() => restartApp(), 6*3600*1000)
 		}
 
 		const stopCommand = () => {
