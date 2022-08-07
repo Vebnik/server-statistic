@@ -31,7 +31,6 @@ class UserModel {
 	}
 
 	public async getUserModel() {
-		//await this.User.sync({alter: true})
 		return this.User
 	}
 

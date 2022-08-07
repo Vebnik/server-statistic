@@ -3,7 +3,6 @@ import si from 'systeminformation'
 import * as cp from 'child_process'
 import MessageEmbed from "../utils/MessageEmbed";
 import {ServerStats} from "../interface/ServerCommand";
-import GlobalProcessStore from "./GlobalProcessStore";
 import UserModel from "../../database/UserModel";
 
 //TODO Переписать getProcess для получения инфы через exec('ps -la') с логикой парса как в parsProcess
@@ -16,6 +15,16 @@ const parsProcess = (str: string): string => {
 	} catch {
 		return ''
 	}
+}
+
+const parsAllProcess = async (str: string): Promise<string> => {
+	return str.split('\n')
+		.filter(el => el)
+		.map(el => {
+			const parsStr = el.replace(/( )+/gmi, ' ').split(' ')
+			return `${parsStr[3]} ${parsStr.at(-1)} `
+		})
+		.join('\n')
 }
 
 const getSystemStats = async (): Promise<ServerStats> => ({
@@ -42,14 +51,11 @@ const createChildProcess = async (value: string, interaction: CommandInteraction
 			await interaction
 				.editReply({embeds: [MessageEmbed.execEmbed(chunk.toString())]})
 		})
-
 		// @ts-ignore
 		process.stderr.on('data', async chunk => {
 			await interaction
 				.editReply({embeds: [MessageEmbed.execEmbed(chunk.toString())]})
 		})
-
-		GlobalProcessStore.setNewProcess(`${value} ${process.pid}`, process)
 
 		await interaction
 			.editReply({embeds: [MessageEmbed.execEmbed('Exec success')]})
@@ -62,8 +68,6 @@ const createChildProcess = async (value: string, interaction: CommandInteraction
 const getRecentLog = async (interaction: CommandInteraction) => {
 	const User = await UserModel.getUserModel()
 	const allLog = await User.findAll()
-
-	console.log(allLog)
 
 	const parsLog = allLog.map(el =>
 		`${el?.dataValues?.id} ${el?.dataValues?.username} ${JSON.parse(el?.dataValues?.interaction)?.option[0]?.name || 'No Data'} ${JSON.parse(el?.dataValues?.interaction)?.option[0]?.options[0]?.value || 'No Data'}`)
@@ -85,7 +89,7 @@ class CommandServer {
 				break
 			case 'get_process': this.getProcess(interaction).catch()
 				break
-			case 'get_logger': this.getLogger(interaction).catch()
+			case 'get_logger': CommandServer.getLogger(interaction).catch()
 				break
 			case 'deploy': this.deploy(interaction).catch()
 				break
@@ -168,14 +172,24 @@ class CommandServer {
 
 	private async getProcess(interaction: CommandInteraction) {
 
-		const data = GlobalProcessStore.getAllProcess().values.join('\n')
-		const embed = MessageEmbed.execEmbed(data)
+		try {
+			const process: cp.ChildProcess = await cp.exec('ps -la')
 
-		await interaction
-			.editReply({embeds: [embed]})
+			process.stdout?.on('data',  async chunk => {
+				const data = await parsAllProcess(chunk.toString())
+				const embed = MessageEmbed.execEmbed(data)
+
+				await interaction.editReply({embeds: [embed]})
+			})
+
+			await interaction.editReply({embeds: [MessageEmbed.execEmbed('Exec success')]})
+		} catch {
+			await interaction.editReply({embeds: [MessageEmbed.execEmbed('Error exec <@324889109355298829>')]})
+		}
+
 	}
 
-	private async getLogger(interaction: CommandInteraction) {
+	private static async getLogger(interaction: CommandInteraction) {
 		await getRecentLog(interaction)
 	}
 }

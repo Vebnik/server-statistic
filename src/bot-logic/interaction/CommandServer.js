@@ -65,7 +65,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var systeminformation_1 = __importDefault(require("systeminformation"));
 var cp = __importStar(require("child_process"));
 var MessageEmbed_1 = __importDefault(require("../utils/MessageEmbed"));
-var GlobalProcessStore_1 = __importDefault(require("./GlobalProcessStore"));
 var UserModel_1 = __importDefault(require("../../database/UserModel"));
 //TODO Переписать getProcess для получения инфы через exec('ps -la') с логикой парса как в parsProcess
 var parsProcess = function (str) {
@@ -78,6 +77,17 @@ var parsProcess = function (str) {
         return '';
     }
 };
+var parsAllProcess = function (str) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        return [2 /*return*/, str.split('\n')
+                .filter(function (el) { return el; })
+                .map(function (el) {
+                var parsStr = el.replace(/( )+/gmi, ' ').split(' ');
+                return "".concat(parsStr[3], " ").concat(parsStr.at(-1), " ");
+            })
+                .join('\n')];
+    });
+}); };
 var getSystemStats = function () { return __awaiter(void 0, void 0, void 0, function () {
     var _a;
     return __generator(this, function (_b) {
@@ -144,7 +154,6 @@ var createChildProcess = function (value, interaction) { return __awaiter(void 0
                         }
                     });
                 }); });
-                GlobalProcessStore_1.default.setNewProcess("".concat(value, " ").concat(process_1.pid), process_1);
                 return [4 /*yield*/, interaction
                         .editReply({ embeds: [MessageEmbed_1.default.execEmbed('Exec success')] })];
             case 2:
@@ -168,7 +177,6 @@ var getRecentLog = function (interaction) { return __awaiter(void 0, void 0, voi
                 return [4 /*yield*/, User.findAll()];
             case 2:
                 allLog = _a.sent();
-                console.log(allLog);
                 parsLog = allLog.map(function (el) { var _a, _b, _c, _d, _e, _f, _g, _h, _j; return "".concat((_a = el === null || el === void 0 ? void 0 : el.dataValues) === null || _a === void 0 ? void 0 : _a.id, " ").concat((_b = el === null || el === void 0 ? void 0 : el.dataValues) === null || _b === void 0 ? void 0 : _b.username, " ").concat(((_e = (_d = JSON.parse((_c = el === null || el === void 0 ? void 0 : el.dataValues) === null || _c === void 0 ? void 0 : _c.interaction)) === null || _d === void 0 ? void 0 : _d.option[0]) === null || _e === void 0 ? void 0 : _e.name) || 'No Data', " ").concat(((_j = (_h = (_g = JSON.parse((_f = el === null || el === void 0 ? void 0 : el.dataValues) === null || _f === void 0 ? void 0 : _f.interaction)) === null || _g === void 0 ? void 0 : _g.option[0]) === null || _h === void 0 ? void 0 : _h.options[0]) === null || _j === void 0 ? void 0 : _j.value) || 'No Data'); });
                 return [4 /*yield*/, interaction.editReply({ embeds: [MessageEmbed_1.default.execEmbed(parsLog.join('\n'))] })];
             case 3:
@@ -193,7 +201,7 @@ var CommandServer = /** @class */ (function () {
                 this.getProcess(interaction).catch();
                 break;
             case 'get_logger':
-                this.getLogger(interaction).catch();
+                CommandServer.getLogger(interaction).catch();
                 break;
             case 'deploy':
                 this.deploy(interaction).catch();
@@ -299,23 +307,48 @@ var CommandServer = /** @class */ (function () {
         });
     };
     CommandServer.prototype.getProcess = function (interaction) {
+        var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var data, embed;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var process_2, _b;
+            var _this = this;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
-                        data = GlobalProcessStore_1.default.getAllProcess().values.join('\n');
-                        embed = MessageEmbed_1.default.execEmbed(data);
-                        return [4 /*yield*/, interaction
-                                .editReply({ embeds: [embed] })];
+                        _c.trys.push([0, 3, , 5]);
+                        return [4 /*yield*/, cp.exec('ps -la')];
                     case 1:
-                        _a.sent();
-                        return [2 /*return*/];
+                        process_2 = _c.sent();
+                        (_a = process_2.stdout) === null || _a === void 0 ? void 0 : _a.on('data', function (chunk) { return __awaiter(_this, void 0, void 0, function () {
+                            var data, embed;
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, parsAllProcess(chunk.toString())];
+                                    case 1:
+                                        data = _a.sent();
+                                        embed = MessageEmbed_1.default.execEmbed(data);
+                                        return [4 /*yield*/, interaction.editReply({ embeds: [embed] })];
+                                    case 2:
+                                        _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); });
+                        return [4 /*yield*/, interaction.editReply({ embeds: [MessageEmbed_1.default.execEmbed('Exec success')] })];
+                    case 2:
+                        _c.sent();
+                        return [3 /*break*/, 5];
+                    case 3:
+                        _b = _c.sent();
+                        return [4 /*yield*/, interaction.editReply({ embeds: [MessageEmbed_1.default.execEmbed('Error exec <@324889109355298829>')] })];
+                    case 4:
+                        _c.sent();
+                        return [3 /*break*/, 5];
+                    case 5: return [2 /*return*/];
                 }
             });
         });
     };
-    CommandServer.prototype.getLogger = function (interaction) {
+    CommandServer.getLogger = function (interaction) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
