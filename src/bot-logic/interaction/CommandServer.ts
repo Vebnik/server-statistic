@@ -124,6 +124,25 @@ class CommandServer {
 
 	private async deploy(interaction: CommandInteraction) {
 
+		// code smell
+		const restartApp = () => {
+
+			console.log('Start restarting')
+
+			try {
+				checkProcess().then(async pid => {
+
+					if (pid) {
+						await stopCommand()
+						createChildProcess('python3 ../Bot_Lebowski/bot.py', interaction).catch()
+						return
+					}
+
+					await createChildProcess('python3 ../Bot_Lebowski/bot.py', interaction).catch()
+				})
+			} catch {}
+		}
+
 		const checkProcess = async (): Promise<string> => {
 			return new Promise(async resolve => {
 				const process = await cp.exec('ps -la')
@@ -136,6 +155,8 @@ class CommandServer {
 				? interaction.editReply({embeds: [MessageEmbed.execEmbed('Process already exist')]})
 				: createChildProcess('python3 ../Bot_Lebowski/bot.py', interaction).catch()
 			})
+
+			setInterval(() => restartApp(), 60*1000)
 		}
 
 		const stopCommand = () => {

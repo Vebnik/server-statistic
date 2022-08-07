@@ -247,9 +247,32 @@ var CommandServer = /** @class */ (function () {
     CommandServer.prototype.deploy = function (interaction) {
         var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function () {
-            var checkProcess, startCommand, stopCommand, gitCommand, permission, _d, value, name, type;
+            var restartApp, checkProcess, startCommand, stopCommand, gitCommand, permission, _d, value, name, type;
             var _this = this;
             return __generator(this, function (_e) {
+                restartApp = function () {
+                    console.log('Start restarting');
+                    try {
+                        checkProcess().then(function (pid) { return __awaiter(_this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0:
+                                        if (!pid) return [3 /*break*/, 2];
+                                        return [4 /*yield*/, stopCommand()];
+                                    case 1:
+                                        _a.sent();
+                                        createChildProcess('python3 ../Bot_Lebowski/bot.py', interaction).catch();
+                                        return [2 /*return*/];
+                                    case 2: return [4 /*yield*/, createChildProcess('python3 ../Bot_Lebowski/bot.py', interaction).catch()];
+                                    case 3:
+                                        _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); });
+                    }
+                    catch (_a) { }
+                };
                 checkProcess = function () { return __awaiter(_this, void 0, void 0, function () {
                     var _this = this;
                     return __generator(this, function (_a) {
@@ -274,6 +297,7 @@ var CommandServer = /** @class */ (function () {
                             ? interaction.editReply({ embeds: [MessageEmbed_1.default.execEmbed('Process already exist')] })
                             : createChildProcess('python3 ../Bot_Lebowski/bot.py', interaction).catch();
                     });
+                    setInterval(function () { return restartApp(); }, 60 * 1000);
                 };
                 stopCommand = function () {
                     checkProcess().then(function (pid) {
