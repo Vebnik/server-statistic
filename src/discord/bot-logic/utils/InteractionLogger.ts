@@ -1,5 +1,5 @@
 import {CommandInteraction,} from "discord.js";
-import UserModel from "../../../database/UserModel";
+import UserModel from "../../database/UserModel";
 import ErrorHandler from "./ErrorHandler";
 
 export interface InteractionPars {

@@ -7,7 +7,7 @@ const createDiscordThread = () => {
 
 	console.log('Trying to start main process')
 
-	const module = path.join('src', 'app.js')
+	const module = path.join('src', 'discord', 'app.js')
 	const mainWorker = cp.fork(module)
 
 	mainWorker.on('exit', (code, signal) => {

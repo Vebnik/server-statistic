@@ -65,7 +65,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var systeminformation_1 = __importDefault(require("systeminformation"));
 var cp = __importStar(require("child_process"));
 var MessageEmbed_1 = __importDefault(require("../utils/MessageEmbed"));
-var UserModel_1 = __importDefault(require("../../../database/UserModel"));
+var UserModel_1 = __importDefault(require("../../database/UserModel"));
 //TODO Краш при попытке отправить эмбед с приветствие Lebowski - запоздалый stdout
 var parsProcess = function (str) {
     try {

@@ -28,7 +28,7 @@ var path = __importStar(require("path"));
 var fs = __importStar(require("fs"));
 var createDiscordThread = function () {
     console.log('Trying to start main process');
-    var module = path.join('src', 'app.js');
+    var module = path.join('src', 'discord', 'app.js');
     var mainWorker = cp.fork(module);
     mainWorker.on('exit', function (code, signal) {
         console.log("mainWorker stopped\nCode ".concat(code, "\nSignal ").concat(signal));

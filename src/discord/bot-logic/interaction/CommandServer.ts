@@ -3,7 +3,7 @@ import si from 'systeminformation'
 import * as cp from 'child_process'
 import MessageEmbed from "../utils/MessageEmbed";
 import {ServerStats} from "../interface/ServerCommand";
-import UserModel from "../../../database/UserModel";
+import UserModel from "../../database/UserModel";
 
 //TODO Краш при попытке отправить эмбед с приветствие Lebowski - запоздалый stdout
 
