@@ -9,10 +9,10 @@ var EventHandler = /** @class */ (function () {
     function EventHandler() {
     }
     EventHandler.prototype.messageEvent = function (context) {
-        console.log(context.message);
+        //console.log(context.message)
     };
     EventHandler.prototype.commandEvent = function (context) {
-        console.log(context);
+        //console.log(context)
     };
     return EventHandler;
 }());

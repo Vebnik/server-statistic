@@ -30,14 +30,30 @@ var cp = __importStar(require("child_process"));
 var path = __importStar(require("path"));
 var fs = __importStar(require("fs"));
 var MessageExchange_1 = __importDefault(require("./src/integrationService/MessageExchange"));
-var createDiscordThread = function () {
-    console.log('Trying to start main process');
-    MessageExchange_1.default.sendMessageTg('Trying to start main process');
-    var module = path.join('src', 'discord', 'app.js');
+// tg
+var createTgThread = function () {
+    console.log('Trying to start tg process');
+    var module = path.join('src', 'telegram', 'app.js');
     var mainWorker = cp.fork(module);
     mainWorker.on('exit', function (code, signal) {
         console.log("mainWorker stopped\nCode ".concat(code, "\nSignal ").concat(signal));
+        try {
+            createTgThread();
+        }
+        catch (err) {
+            console.log(err);
+        }
+    });
+};
+createTgThread();
+// discord
+var createDiscordThread = function () {
+    console.log('Trying to start discord process');
+    var module = path.join('src', 'discord', 'app.js');
+    var mainWorker = cp.fork(module);
+    mainWorker.on('exit', function (code, signal) {
         MessageExchange_1.default.sendMessageTg("mainWorker stopped\nCode ".concat(code, "\nSignal ").concat(signal));
+        console.log("mainWorker stopped\nCode ".concat(code, "\nSignal ").concat(signal));
         try {
             createDiscordThread();
         }
@@ -56,17 +72,3 @@ var createDiscordThread = function () {
     });
 };
 createDiscordThread();
-var createTgThread = function () {
-    var module = path.join('src', 'telegram', 'app.js');
-    var mainWorker = cp.fork(module);
-    mainWorker.on('exit', function (code, signal) {
-        console.log("mainWorker stopped\nCode ".concat(code, "\nSignal ").concat(signal));
-        try {
-            createTgThread();
-        }
-        catch (err) {
-            console.log(err);
-        }
-    });
-};
-createTgThread();

@@ -7,11 +7,11 @@ class MatchedContext<T, U> {
 class EventHandler {
 
 	public messageEvent(context: Context<Update>) {
-		console.log(context.message)
+		//console.log(context.message)
 	}
 
 	public commandEvent(context: MatchedContext<Context<Update>, "text">) {
-		console.log(context)
+		//console.log(context)
 	}
 }
 

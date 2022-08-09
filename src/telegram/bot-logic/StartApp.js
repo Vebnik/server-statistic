@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var EventHandler_1 = __importDefault(require("./EventHandler"));
+var MessageUtils_1 = __importDefault(require("./utils/MessageUtils"));
 var StartApp = /** @class */ (function () {
     function StartApp() {
     }
@@ -27,7 +28,8 @@ var StartApp = /** @class */ (function () {
     };
     StartApp.onLaunch = function (client) {
         var _a;
-        console.log("\n\t\t\tApp ".concat((_a = client.botInfo) === null || _a === void 0 ? void 0 : _a.username, "\n\t\t\tStarted at ").concat(new Date().toISOString(), "\n\t\t"));
+        MessageUtils_1.default.globalClient = client;
+        console.log("App ".concat((_a = client.botInfo) === null || _a === void 0 ? void 0 : _a.username, "\nStarted at ").concat(new Date().toISOString()));
     };
     return StartApp;
 }());

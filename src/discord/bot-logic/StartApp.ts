@@ -15,7 +15,7 @@ class StartApp {
 			.catch(err => ErrorHandler.startError(err))
 
 		client.on('ready', () =>
-			console.log(`App started at ${new Date().toISOString()}`))
+			console.log(`App discordjs \nStarted at ${new Date().toISOString()}`))
 	}
 
 	private onInteraction(client: Client) {

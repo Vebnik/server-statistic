@@ -19,7 +19,7 @@ var StartApp = /** @class */ (function () {
         })
             .catch(function (err) { return ErrorHandler_1.default.startError(err); });
         client.on('ready', function () {
-            return console.log("App started at ".concat(new Date().toISOString()));
+            return console.log("App discordjs \nStarted at ".concat(new Date().toISOString()));
         });
     };
     StartApp.prototype.onInteraction = function (client) {

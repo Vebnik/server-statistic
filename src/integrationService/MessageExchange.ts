@@ -1,10 +1,9 @@
-import {client} from "../telegram/app";
+import MessageUtils from "../telegram/bot-logic/utils/MessageUtils";
 
 class MessageExchange {
 
 	public sendMessageTg(message: string) {
-		client.telegram.sendMessage(process.env.CHAT_ID ?? 'null', message)
-			.catch(err => console.error(err))
+		MessageUtils.sendDmMessage(process.env.CHAT_ID ?? 'null', message)
 	}
 
 }

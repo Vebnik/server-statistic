@@ -1,6 +1,7 @@
 import {Context ,Telegraf} from "telegraf";
 import {Update} from "typegram";
 import EventHandler from "./EventHandler";
+import MessageUtils from "./utils/MessageUtils";
 
 
 class StartApp {
@@ -29,10 +30,10 @@ class StartApp {
 	}
 
 	private static onLaunch(client: Telegraf) {
-		console.log(`
-			App ${client.botInfo?.username}
-			Started at ${new Date().toISOString()}
-		`)
+
+		MessageUtils.globalClient = client
+
+		console.log(`App ${client.botInfo?.username}\nStarted at ${new Date().toISOString()}`)
 	}
 }
 
