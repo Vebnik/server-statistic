@@ -26,11 +26,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var cp = __importStar(require("child_process"));
 var path = __importStar(require("path"));
 var createMainThread = function () {
+    console.log('Trying to start main process');
     var module = path.join('src', 'index.js');
     var mainWorker = cp.fork(module);
     mainWorker.on('exit', function (code, signal) {
-        console.log("mainWorker stopped\nCode ".concat(code, "\n Signal ").concat(signal));
-        console.log('Trying to start process');
+        console.log("mainWorker stopped\nCode ".concat(code, "\nSignal ").concat(signal));
         try {
             createMainThread();
         }

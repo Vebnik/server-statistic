@@ -66,7 +66,9 @@ var systeminformation_1 = __importDefault(require("systeminformation"));
 var cp = __importStar(require("child_process"));
 var MessageEmbed_1 = __importDefault(require("../utils/MessageEmbed"));
 var UserModel_1 = __importDefault(require("../../database/UserModel"));
-//TODO Отслеживание краша main проецсса и перезапуск бота
+//TODO Краш при попытке отправить эмбед с приветствие Lebowski - запоздалый stdout
+//TODO В команде get_logger выводить только 30 последних записей.
+//TODO Сделать боле удобное логирование ошибок при падении worker'а
 var parsProcess = function (str) {
     try {
         return str.split('\n')
@@ -177,7 +179,11 @@ var getRecentLog = function (interaction) { return __awaiter(void 0, void 0, voi
                 return [4 /*yield*/, User.findAll()];
             case 2:
                 allLog = _a.sent();
-                parsLog = allLog.map(function (el) { var _a, _b, _c, _d, _e, _f, _g, _h, _j; return "".concat((_a = el === null || el === void 0 ? void 0 : el.dataValues) === null || _a === void 0 ? void 0 : _a.id, " ").concat((_b = el === null || el === void 0 ? void 0 : el.dataValues) === null || _b === void 0 ? void 0 : _b.username, " ").concat(((_e = (_d = JSON.parse((_c = el === null || el === void 0 ? void 0 : el.dataValues) === null || _c === void 0 ? void 0 : _c.interaction)) === null || _d === void 0 ? void 0 : _d.option[0]) === null || _e === void 0 ? void 0 : _e.name) || 'No Data', " ").concat(((_j = (_h = (_g = JSON.parse((_f = el === null || el === void 0 ? void 0 : el.dataValues) === null || _f === void 0 ? void 0 : _f.interaction)) === null || _g === void 0 ? void 0 : _g.option[0]) === null || _h === void 0 ? void 0 : _h.options[0]) === null || _j === void 0 ? void 0 : _j.value) || 'No Data'); });
+                parsLog = allLog.slice(-30).map(function (el) {
+                    var _a, _b, _c, _d, _e;
+                    var _f = el === null || el === void 0 ? void 0 : el.dataValues, id = _f.id, username = _f.username, interaction = _f.interaction;
+                    return "".concat(id, " ").concat(username, " ").concat(((_b = (_a = JSON.parse(interaction)) === null || _a === void 0 ? void 0 : _a.option[0]) === null || _b === void 0 ? void 0 : _b.name) || 'No Data', " ").concat(((_e = (_d = (_c = JSON.parse(interaction)) === null || _c === void 0 ? void 0 : _c.option[0]) === null || _d === void 0 ? void 0 : _d.options[0]) === null || _e === void 0 ? void 0 : _e.value) || 'No Data');
+                });
                 return [4 /*yield*/, interaction.editReply({ embeds: [MessageEmbed_1.default.execEmbed(parsLog.join('\n'))] })];
             case 3:
                 _a.sent();

@@ -4,13 +4,14 @@ import * as path from "path";
 
 const createMainThread = () => {
 
+	console.log('Trying to start main process')
+
 	const module = path.join('src', 'index.js')
 	const mainWorker = cp.fork(module)
 
 	mainWorker.on('exit', (code, signal) => {
 
-		console.log(`mainWorker stopped\nCode ${code}\n Signal ${signal}`)
-		console.log('Trying to start process')
+		console.log(`mainWorker stopped\nCode ${code}\nSignal ${signal}`)
 
 		try {
 			createMainThread()
