@@ -25,14 +25,24 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var cp = __importStar(require("child_process"));
 var path = __importStar(require("path"));
+var fs = __importStar(require("fs"));
 var createMainThread = function () {
     console.log('Trying to start main process');
-    var module = path.join('src', 'index.js');
+    var module = path.join('src', 'app.js');
     var mainWorker = cp.fork(module);
     mainWorker.on('exit', function (code, signal) {
         console.log("mainWorker stopped\nCode ".concat(code, "\nSignal ").concat(signal));
         try {
             createMainThread();
+        }
+        catch (err) {
+            console.log(err);
+        }
+    });
+    mainWorker.on('error', function (err) {
+        console.log("mainWorker stopped\nError ".concat(err));
+        try {
+            fs.writeFile("".concat(Date.now(), ".json"), JSON.stringify(err, null, 2), function () { return console.log('Logging error'); });
         }
         catch (err) {
             console.log(err);

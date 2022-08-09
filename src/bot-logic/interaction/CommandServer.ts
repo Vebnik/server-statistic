@@ -6,7 +6,6 @@ import {ServerStats} from "../interface/ServerCommand";
 import UserModel from "../../database/UserModel";
 
 //TODO Краш при попытке отправить эмбед с приветствие Lebowski - запоздалый stdout
-//TODO В команде get_logger выводить только 30 последних записей.
 //TODO Сделать боле удобное логирование ошибок при падении worker'а
 
 const parsProcess = (str: string): string => {
