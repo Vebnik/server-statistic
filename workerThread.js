@@ -22,16 +22,22 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var cp = __importStar(require("child_process"));
 var path = __importStar(require("path"));
 var fs = __importStar(require("fs"));
+var MessageExchange_1 = __importDefault(require("./src/integrationService/MessageExchange"));
 var createDiscordThread = function () {
     console.log('Trying to start main process');
+    MessageExchange_1.default.sendMessageTg('Trying to start main process');
     var module = path.join('src', 'discord', 'app.js');
     var mainWorker = cp.fork(module);
     mainWorker.on('exit', function (code, signal) {
         console.log("mainWorker stopped\nCode ".concat(code, "\nSignal ").concat(signal));
+        MessageExchange_1.default.sendMessageTg("mainWorker stopped\nCode ".concat(code, "\nSignal ").concat(signal));
         try {
             createDiscordThread();
         }
@@ -50,3 +56,17 @@ var createDiscordThread = function () {
     });
 };
 createDiscordThread();
+var createTgThread = function () {
+    var module = path.join('src', 'telegram', 'app.js');
+    var mainWorker = cp.fork(module);
+    mainWorker.on('exit', function (code, signal) {
+        console.log("mainWorker stopped\nCode ".concat(code, "\nSignal ").concat(signal));
+        try {
+            createTgThread();
+        }
+        catch (err) {
+            console.log(err);
+        }
+    });
+};
+createTgThread();
