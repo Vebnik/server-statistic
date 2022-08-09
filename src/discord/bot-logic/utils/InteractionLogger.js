@@ -39,7 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var UserModel_1 = __importDefault(require("../../database/UserModel"));
+var UserModel_1 = __importDefault(require("../../../database/UserModel"));
 var ErrorHandler_1 = __importDefault(require("./ErrorHandler"));
 var InteractionLogger = /** @class */ (function () {
     function InteractionLogger() {

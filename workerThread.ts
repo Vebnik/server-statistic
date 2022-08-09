@@ -3,7 +3,7 @@ import * as path from "path";
 import * as fs from "fs";
 
 
-const createMainThread = () => {
+const createDiscordThread = () => {
 
 	console.log('Trying to start main process')
 
@@ -15,7 +15,7 @@ const createMainThread = () => {
 		console.log(`mainWorker stopped\nCode ${code}\nSignal ${signal}`)
 
 		try {
-			createMainThread()
+			createDiscordThread()
 		} catch (err) {
 			console.log(err)
 		}
@@ -32,4 +32,4 @@ const createMainThread = () => {
 		}
 	})
 
-};createMainThread()
+};createDiscordThread()

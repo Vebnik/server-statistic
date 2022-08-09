@@ -26,14 +26,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var cp = __importStar(require("child_process"));
 var path = __importStar(require("path"));
 var fs = __importStar(require("fs"));
-var createMainThread = function () {
+var createDiscordThread = function () {
     console.log('Trying to start main process');
     var module = path.join('src', 'app.js');
     var mainWorker = cp.fork(module);
     mainWorker.on('exit', function (code, signal) {
         console.log("mainWorker stopped\nCode ".concat(code, "\nSignal ").concat(signal));
         try {
-            createMainThread();
+            createDiscordThread();
         }
         catch (err) {
             console.log(err);
@@ -49,4 +49,4 @@ var createMainThread = function () {
         }
     });
 };
-createMainThread();
+createDiscordThread();

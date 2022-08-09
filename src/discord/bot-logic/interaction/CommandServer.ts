@@ -3,10 +3,9 @@ import si from 'systeminformation'
 import * as cp from 'child_process'
 import MessageEmbed from "../utils/MessageEmbed";
 import {ServerStats} from "../interface/ServerCommand";
-import UserModel from "../../database/UserModel";
+import UserModel from "../../../database/UserModel";
 
 //TODO Краш при попытке отправить эмбед с приветствие Lebowski - запоздалый stdout
-//TODO Сделать боле удобное логирование ошибок при падении worker'а
 
 const parsProcess = (str: string): string => {
 	try {
@@ -71,6 +70,7 @@ const getRecentLog = async (interaction: CommandInteraction) => {
 	const allLog = await User.findAll()
 
 	const parsLog = allLog.slice(-30).map(el => {
+		//@ts-ignore
 		const { id, username, interaction } = el?.dataValues
 		return `${id} ${username} ${JSON.parse(interaction)?.option[0]?.name || 'No Data'} ${JSON.parse(interaction)?.option[0]?.options[0]?.value || 'No Data'}`
 	})

@@ -65,9 +65,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var systeminformation_1 = __importDefault(require("systeminformation"));
 var cp = __importStar(require("child_process"));
 var MessageEmbed_1 = __importDefault(require("../utils/MessageEmbed"));
-var UserModel_1 = __importDefault(require("../../database/UserModel"));
+var UserModel_1 = __importDefault(require("../../../database/UserModel"));
 //TODO Краш при попытке отправить эмбед с приветствие Lebowski - запоздалый stdout
-//TODO Сделать боле удобное логирование ошибок при падении worker'а
 var parsProcess = function (str) {
     try {
         return str.split('\n')
@@ -180,6 +179,7 @@ var getRecentLog = function (interaction) { return __awaiter(void 0, void 0, voi
                 allLog = _a.sent();
                 parsLog = allLog.slice(-30).map(function (el) {
                     var _a, _b, _c, _d, _e;
+                    //@ts-ignore
                     var _f = el === null || el === void 0 ? void 0 : el.dataValues, id = _f.id, username = _f.username, interaction = _f.interaction;
                     return "".concat(id, " ").concat(username, " ").concat(((_b = (_a = JSON.parse(interaction)) === null || _a === void 0 ? void 0 : _a.option[0]) === null || _b === void 0 ? void 0 : _b.name) || 'No Data', " ").concat(((_e = (_d = (_c = JSON.parse(interaction)) === null || _c === void 0 ? void 0 : _c.option[0]) === null || _d === void 0 ? void 0 : _d.options[0]) === null || _e === void 0 ? void 0 : _e.value) || 'No Data');
                 });
