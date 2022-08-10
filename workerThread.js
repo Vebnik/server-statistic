@@ -30,15 +30,25 @@ var cp = __importStar(require("child_process"));
 var path = __importStar(require("path"));
 var fs = __importStar(require("fs"));
 var MessageExchange_1 = __importDefault(require("./src/integrationService/MessageExchange"));
+//@TODO Подумаьб над логикой для ТГ
 // tg
 var createTgThread = function () {
     console.log('Trying to start tg process');
     var module = path.join('src', 'telegram', 'app.js');
     var mainWorker = cp.fork(module);
     mainWorker.on('exit', function (code, signal) {
-        console.log("mainWorker stopped\nCode ".concat(code, "\nSignal ").concat(signal));
+        console.log("tgWorker stopped\nCode ".concat(code, "\nSignal ").concat(signal));
         try {
             createTgThread();
+        }
+        catch (err) {
+            console.log(err);
+        }
+    });
+    mainWorker.on('error', function (err) {
+        console.log("tgWorker stopped\nError ".concat(err));
+        try {
+            fs.writeFile("".concat(Date.now(), ".json"), JSON.stringify(err, null, 2), function () { return console.log('Logging error'); });
         }
         catch (err) {
             console.log(err);
@@ -52,9 +62,9 @@ var createDiscordThread = function () {
     var module = path.join('src', 'discord', 'app.js');
     var mainWorker = cp.fork(module);
     mainWorker.on('exit', function (code, signal) {
-        MessageExchange_1.default.sendMessageTg("mainWorker stopped\nCode ".concat(code, "\nSignal ").concat(signal));
-        console.log("mainWorker stopped\nCode ".concat(code, "\nSignal ").concat(signal));
         try {
+            MessageExchange_1.default.sendMessageTg("discordWorker stopped\nCode ".concat(code, "\nSignal ").concat(signal));
+            console.log("discordWorker stopped\nCode ".concat(code, "\nSignal ").concat(signal));
             createDiscordThread();
         }
         catch (err) {
@@ -62,7 +72,7 @@ var createDiscordThread = function () {
         }
     });
     mainWorker.on('error', function (err) {
-        console.log("mainWorker stopped\nError ".concat(err));
+        console.log("discordWorker stopped\nError ".concat(err));
         try {
             fs.writeFile("".concat(Date.now(), ".json"), JSON.stringify(err, null, 2), function () { return console.log('Logging error'); });
         }

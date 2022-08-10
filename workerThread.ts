@@ -3,6 +3,8 @@ import * as path from "path";
 import * as fs from "fs";
 import MessageExchange from "./src/integrationService/MessageExchange";
 
+//@TODO Подумаьб над логикой для ТГ
+
 // tg
 const createTgThread = () => {
 
@@ -13,10 +15,21 @@ const createTgThread = () => {
 
 	mainWorker.on('exit', (code, signal) => {
 
-		console.log(`mainWorker stopped\nCode ${code}\nSignal ${signal}`)
+		console.log(`tgWorker stopped\nCode ${code}\nSignal ${signal}`)
 
 		try {
 			createTgThread()
+		} catch (err) {
+			console.log(err)
+		}
+	})
+
+	mainWorker.on('error', err => {
+
+		console.log(`tgWorker stopped\nError ${err}`)
+
+		try {
+			fs.writeFile(`${Date.now()}.json`, JSON.stringify(err, null, 2), () => console.log('Logging error'))
 		} catch (err) {
 			console.log(err)
 		}
@@ -35,10 +48,10 @@ const createDiscordThread = () => {
 
 	mainWorker.on('exit', (code, signal) => {
 
-		MessageExchange.sendMessageTg(`mainWorker stopped\nCode ${code}\nSignal ${signal}`)
-		console.log(`mainWorker stopped\nCode ${code}\nSignal ${signal}`)
-
 		try {
+			MessageExchange.sendMessageTg(`discordWorker stopped\nCode ${code}\nSignal ${signal}`)
+			console.log(`discordWorker stopped\nCode ${code}\nSignal ${signal}`)
+
 			createDiscordThread()
 		} catch (err) {
 			console.log(err)
@@ -47,7 +60,7 @@ const createDiscordThread = () => {
 
 	mainWorker.on('error', err => {
 
-		console.log(`mainWorker stopped\nError ${err}`)
+		console.log(`discordWorker stopped\nError ${err}`)
 
 		try {
 			fs.writeFile(`${Date.now()}.json`, JSON.stringify(err, null, 2), () => console.log('Logging error'))
