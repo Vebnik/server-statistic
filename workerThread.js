@@ -68,8 +68,7 @@ var createDiscordThread = function () {
         }
     });
     mainWorker.on('error', function (err) {
-        console.log("discordWorker stopped\nError ".concat(err)) /
-        ;
+        console.log("discordWorker stopped\nError ".concat(err));
         try {
             fs.writeFile("".concat(Date.now(), ".json"), JSON.stringify(err, null, 2), function () { return console.log('Logging error'); });
         }

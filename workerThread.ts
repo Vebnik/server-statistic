@@ -59,7 +59,7 @@ const createDiscordThread = () => {
 
 	mainWorker.on('error', err => {
 
-		console.log(`discordWorker stopped\nError ${err}`)/
+		console.log(`discordWorker stopped\nError ${err}`)
 
 		try {
 			fs.writeFile(`${Date.now()}.json`, JSON.stringify(err, null, 2), () => console.log('Logging error'))
