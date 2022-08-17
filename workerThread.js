@@ -22,14 +22,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 var cp = __importStar(require("child_process"));
 var path = __importStar(require("path"));
 var fs = __importStar(require("fs"));
-var MessageExchange_1 = __importDefault(require("./src/integrationService/MessageExchange"));
 //@TODO Подумаьб над логикой для ТГ
 // tg
 var createTgThread = function () {
@@ -63,7 +59,7 @@ var createDiscordThread = function () {
     var mainWorker = cp.fork(module);
     mainWorker.on('exit', function (code, signal) {
         try {
-            MessageExchange_1.default.sendMessageTg("discordWorker stopped\nCode ".concat(code, "\nSignal ").concat(signal));
+            //MessageExchange.sendMessageTg(`discordWorker stopped\nCode ${code}\nSignal ${signal}`)
             console.log("discordWorker stopped\nCode ".concat(code, "\nSignal ").concat(signal));
             createDiscordThread();
         }
@@ -72,7 +68,8 @@ var createDiscordThread = function () {
         }
     });
     mainWorker.on('error', function (err) {
-        console.log("discordWorker stopped\nError ".concat(err));
+        console.log("discordWorker stopped\nError ".concat(err)) /
+        ;
         try {
             fs.writeFile("".concat(Date.now(), ".json"), JSON.stringify(err, null, 2), function () { return console.log('Logging error'); });
         }

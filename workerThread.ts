@@ -1,7 +1,6 @@
 import * as cp from 'child_process'
 import * as path from "path";
 import * as fs from "fs";
-import MessageExchange from "./src/integrationService/MessageExchange";
 
 //@TODO Подумаьб над логикой для ТГ
 
@@ -49,7 +48,7 @@ const createDiscordThread = () => {
 	mainWorker.on('exit', (code, signal) => {
 
 		try {
-			MessageExchange.sendMessageTg(`discordWorker stopped\nCode ${code}\nSignal ${signal}`)
+			//MessageExchange.sendMessageTg(`discordWorker stopped\nCode ${code}\nSignal ${signal}`)
 			console.log(`discordWorker stopped\nCode ${code}\nSignal ${signal}`)
 
 			createDiscordThread()
@@ -60,7 +59,7 @@ const createDiscordThread = () => {
 
 	mainWorker.on('error', err => {
 
-		console.log(`discordWorker stopped\nError ${err}`)
+		console.log(`discordWorker stopped\nError ${err}`)/
 
 		try {
 			fs.writeFile(`${Date.now()}.json`, JSON.stringify(err, null, 2), () => console.log('Logging error'))
